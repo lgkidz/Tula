@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "702504630497",
+    "firebase_url": "https://leftovers-3aab5.firebaseio.com",
+    "project_id": "leftovers-3aab5",
+    "storage_bucket": "leftovers-3aab5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:702504630497:android:e1b29f6a393d8815",
+        "android_client_info": {
+          "package_name": "com.odiousrainbow.leftovers"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "702504630497-nkdh53t6dbkvd65t1cu3gp4j6ghekrdl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.odiousrainbow.leftovers",
+            "certificate_hash": "67e2414aba49051b38c60b5e8b515fc67922cee9"
+          }
+        },
+        {
+          "client_id": "702504630497-1l8rj7n79g29vkltoqk28kfolg1e7clv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDd2FLp-k5LD3TF3Z2iN8yM3S6IrTg6IHM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "702504630497-1l8rj7n79g29vkltoqk28kfolg1e7clv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
