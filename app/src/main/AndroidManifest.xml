@@ -21,8 +21,36 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SettingActivity" />
-        <activity android:name=".DishDetailsActivity"></activity>
+        <activity android:name=".SettingActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.odiousrainbow.leftovers.MainActivity" />
+        </activity>
+        <activity android:name=".DishDetailsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.odiousrainbow.leftovers.MainActivity" />
+        </activity>
+        <activity android:name=".FeedbackActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.odiousrainbow.leftovers.MainActivity" />
+        </activity>
+        <activity android:name=".UpgradeToProActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.odiousrainbow.leftovers.MainActivity" />
+        </activity>
+        <activity android:name=".AddStuffActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.odiousrainbow.leftovers.MainActivity" />
+        </activity>
+        <activity android:name=".AddStuffDetailsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.odiousrainbow.leftovers.AddStuffActivity" />
+        </activity>
     </application>
 
 </manifest>

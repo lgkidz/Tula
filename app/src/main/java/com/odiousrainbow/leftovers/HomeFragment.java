@@ -107,39 +107,14 @@ public class HomeFragment extends Fragment {
                             recipes.add(recipe);
                         }
                         fillView();
-                        /*
-                        String s = "";
-                        for (Recipe r : recipes){
-                            mStorageRef.child(r.getImageUrl()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    Log.d("uri", uri.toString());
-                                    Picasso.get().load(uri).placeholder(R.drawable.tula).resize(1000,1000).centerCrop().into(iv);
-                                }
-                            });
-                            s += "imageUrl : " + r.getImageUrl() + "\n";
-                            s +="Name: " +  r.getName() + "\n";
-                            s +="Serving: " + r.getServing() + "people(s)\n";
-                            s += "Ingredients: \n";
-                            for(Ingredient i : r.getIngredients()){
-                                s += i.toString() + "\n";
-                            }
-                            s += "\n";
-                            s +="Instruction: \n" +  r.getInstruction() + "\n";
-                            s += "____________________________________________\n";
-
-
-                        }
-                        tv.setText(s);
-                        mProgressBar.setVisibility(View.INVISIBLE); */
                     }
                 });
 
     }
 
     public void fillView(){
-        DishesGridAdapter mAdapter = new DishesGridAdapter(this.getContext(),recipes);
-        homeRecyclerView.setLayoutManager(new GridLayoutManager(this.getContext(),2));
+        DishesGridAdapter mAdapter = new DishesGridAdapter(getActivity(),recipes);
+        homeRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
         homeRecyclerView.setAdapter(mAdapter);
         mProgressBar.setVisibility(View.INVISIBLE);
     }

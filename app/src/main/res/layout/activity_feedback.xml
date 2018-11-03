@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DishDetailsActivity">
+    tools:context=".FeedbackActivity">
     <android.support.v7.widget.Toolbar
         app:titleTextColor="@color/white"
         android:id="@+id/my_toolbar"
@@ -15,10 +15,10 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Here we are at the details"
-        tools:layout_editor_absoluteX="163dp"
-        tools:layout_editor_absoluteY="210dp" />
+        android:text="Feedback"
+        tools:layout_editor_absoluteX="121dp"
+        tools:layout_editor_absoluteY="96dp" />
 </android.support.constraint.ConstraintLayout>

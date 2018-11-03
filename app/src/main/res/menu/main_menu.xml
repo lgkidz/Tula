@@ -5,16 +5,13 @@
         android:id="@+id/menu_search"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_search"/>
-    <item android:title="Upgrade to Pro"
+    <item android:title="Nâng cấp"
         android:id="@+id/menu_up_to_pro"
         app:showAsAction="never"/>
-    <item android:title="Setting"
+    <item android:title="Cài đặt"
         android:id="@+id/menu_setting"
         app:showAsAction="never"/>
-    <item android:title="Help"
-        android:id="@+id/menu_help"
-        app:showAsAction="never"/>
-    <item android:title="Send Feedback"
+    <item android:title="Đánh giá"
         android:id="@+id/menu_feedback"
         app:showAsAction="never"/>
 </menu>
