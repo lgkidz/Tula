@@ -1,9 +1,8 @@
-package com.odiousrainbow.leftovers;
+package com.odiousrainbow.leftovers.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -12,14 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.odiousrainbow.leftovers.DishDetailsActivity;
+import com.odiousrainbow.leftovers.R;
+import com.odiousrainbow.leftovers.DataModel.Recipe;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public class DishesGridAdapter extends RecyclerView.Adapter<DishesGridAdapter.Di
     private final String KEY_IMAGES_FOLDER = "images";
 
     public DishesGridAdapter(Context context, List<Recipe> data){
-        mStorageRef = FirebaseStorage.getInstance().getReference(KEY_IMAGES_FOLDER);
+        this.mStorageRef = FirebaseStorage.getInstance().getReference(KEY_IMAGES_FOLDER);
         this.mContext = context;
         this.mData = data;
 
@@ -49,15 +49,14 @@ public class DishesGridAdapter extends RecyclerView.Adapter<DishesGridAdapter.Di
 
     @Override
     public void onBindViewHolder(@NonNull final DishViewHolder dishViewHolder,final int i) {
-        Log.d("Rec", "onBindViewHolder: " + i);
         dishViewHolder.tvDishName.setText(mData.get(i).getName());
         mStorageRef.child(mData.get(i).getImageUrl()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Log.d("uri", uri.toString());
                 Picasso.get().load(uri).into(dishViewHolder.ivDishThumbnail);
             }
         });
+
         dishViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,10 +84,10 @@ public class DishesGridAdapter extends RecyclerView.Adapter<DishesGridAdapter.Di
         public DishViewHolder(@NonNull final View itemView) {
             super(itemView);
 
-            tvDishName = (TextView) itemView.findViewById(R.id.dish_name);
-            ivDishThumbnail = (ImageView) itemView.findViewById(R.id.dish_thumbnail);
-            ibFavorite = (Button) itemView.findViewById(R.id.btn_fav);
-            cardView = (CardView) itemView.findViewById(R.id.card_view_dish);
+            tvDishName = itemView.findViewById(R.id.dish_name);
+            ivDishThumbnail = itemView.findViewById(R.id.dish_thumbnail);
+            ibFavorite = itemView.findViewById(R.id.btn_fav);
+            cardView = itemView.findViewById(R.id.card_view_dish);
             ibFavorite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

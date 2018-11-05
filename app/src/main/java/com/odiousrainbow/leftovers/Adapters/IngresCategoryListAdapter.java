@@ -1,4 +1,4 @@
-package com.odiousrainbow.leftovers;
+package com.odiousrainbow.leftovers.Adapters;
 
 import android.content.Context;
 import android.util.Log;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
+
+import com.odiousrainbow.leftovers.R;
 
 import java.util.HashMap;
 import java.util.List;

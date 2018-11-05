@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">TULA</string>
     <string name="preference_file_key">com.odiousrainbow.leftovers.PREFERENCE_FILE_KEY</string>
+    <string name="preference_stored_stuff_key">ThingsInMyTula</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="feedback_activity_title">Đánh giá</string>
@@ -13,6 +14,12 @@
         <item>lạng</item>
         <item>kg</item>
     </string-array>
+    <string-array name="dairy_unit">
+        <item>gram</item>
+        <item>kg</item>
+        <item>ml</item>
+        <item>lít</item>
+    </string-array>
     <string-array name="egg_unit">
         <item>quả</item>
         <item>tá</item>
@@ -20,10 +27,11 @@
         <item>kg</item>
     </string-array>
     <string-array name="veg_unit">
-        <item>mớ</item>
-        <item>quả</item>
         <item>gram</item>
         <item>kg</item>
+        <item>mớ</item>
+        <item>quả</item>
+        <item>củ</item>
     </string-array>
     <string-array name="fruit_unit">
         <item>quả</item>

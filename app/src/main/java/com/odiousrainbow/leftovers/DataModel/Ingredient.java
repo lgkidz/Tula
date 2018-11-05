@@ -1,4 +1,4 @@
-package com.odiousrainbow.leftovers;
+package com.odiousrainbow.leftovers.DataModel;
 
 public class Ingredient {
     private String name;

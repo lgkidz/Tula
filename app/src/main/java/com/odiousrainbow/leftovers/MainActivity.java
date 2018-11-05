@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -13,11 +12,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+
+import com.odiousrainbow.leftovers.HomescreenFragments.CartFragment;
+import com.odiousrainbow.leftovers.HomescreenFragments.HomeFragment;
+import com.odiousrainbow.leftovers.HomescreenFragments.NotiFragment;
+import com.odiousrainbow.leftovers.HomescreenFragments.PlanFragment;
+import com.odiousrainbow.leftovers.HomescreenFragments.TulaFragment;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -38,9 +42,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
-        if(null == savedInstanceState) {
-            setFragment(new HomeFragment());
-        }
+
         setContentView(R.layout.activity_main);
 
         myToolbar = findViewById(R.id.my_toolbar);
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
         myToolbar.setLogo(R.drawable.inapplogo);
 
         mBottomNavigationBar = findViewById(R.id.bottom_nav_bar);
+
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout, R.string.drawer_open,R.string.drawer_close);
@@ -122,6 +125,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        if(null == savedInstanceState) {
+            setFragment(new HomeFragment());
+        }
+        Intent intent = getIntent();
+        if(intent.hasExtra("navigateToTula")){
+            mBottomNavigationBar.setSelectedItemId(R.id.bottom_nav_tula);
+        }
     }
 
     private void setFragment(Fragment fragment) {
@@ -139,7 +149,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(mDrawerToggle.onOptionsItemSelected(item)){
-
             return true;
         }
         if(item.getItemId() == R.id.menu_up_to_pro){

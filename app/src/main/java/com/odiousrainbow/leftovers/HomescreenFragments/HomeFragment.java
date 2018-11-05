@@ -1,9 +1,12 @@
-package com.odiousrainbow.leftovers;
+package com.odiousrainbow.leftovers.HomescreenFragments;
 
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,10 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -22,7 +22,15 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.odiousrainbow.leftovers.Adapters.DishesGridAdapter;
+import com.odiousrainbow.leftovers.AddStuffActivity;
+import com.odiousrainbow.leftovers.DataModel.Ingredient;
+import com.odiousrainbow.leftovers.DataModel.Recipe;
+import com.odiousrainbow.leftovers.R;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,14 +42,17 @@ import java.util.Map;
 public class HomeFragment extends Fragment {
     private RecyclerView homeRecyclerView;
     private ProgressBar mProgressBar;
+    private FloatingActionButton fab_empty;
+    private ConstraintLayout empty_tula_layout;
 
     private FirebaseFirestore db;
     private StorageReference mStorageRef;
 
-    private List<Recipe> recipes = new ArrayList<>();
+    private List<Recipe> data = new ArrayList<>();
+    private List<Recipe> suggestedDishes = new ArrayList<>();
     private final String KEY_COLLECTION = "dishes";
     private final String KEY_IMAGES_FOLDER = "images";
-
+    private Context context;
     private final String KEY_DISH_NAME = "name";
     private final String KEY_DISH_INSTRUCTION = "instr";
     private final String KEY_DISH_IMAGE_URL = "image";
@@ -62,13 +73,24 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater,container,savedInstanceState);
-
+        context = getActivity();
         db = FirebaseFirestore.getInstance();
         mStorageRef = FirebaseStorage.getInstance().getReference(KEY_IMAGES_FOLDER);
 
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         mProgressBar = v.findViewById(R.id.home_fragment_pb);
         homeRecyclerView = v.findViewById(R.id.dishes_grid);
+        fab_empty = v.findViewById(R.id.fab_empty);
+
+        fab_empty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent addStuffIntent = new Intent(getActivity(),AddStuffActivity.class);
+                startActivity(addStuffIntent);
+            }
+        });
+
+        empty_tula_layout = v.findViewById(R.id.empty_tula_layout);
         homeRecyclerView.setItemViewCacheSize(30);
         getSpecific();
 
@@ -77,12 +99,20 @@ public class HomeFragment extends Fragment {
     }
 
     public void getSpecific(){
+        if(isAdded()){
+            SharedPreferences sharedPreferences = context.getSharedPreferences(getString(R.string.preference_file_key),Context.MODE_PRIVATE);
+            String json = sharedPreferences.getString(getString(R.string.preference_stored_stuff_key),null);
+            if(json == null){
+                empty_tula_layout.setVisibility(View.VISIBLE);
+            }
+        }
+
         db.collection(KEY_COLLECTION)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        List<Map<String,Object>> m = null;
+                        List<Map<String,Object>> m;
                         for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
 
                             List<Ingredient> ingredients = new ArrayList<>();
@@ -103,17 +133,46 @@ public class HomeFragment extends Fragment {
                                     ,documentSnapshot.getString(KEY_DISH_INSTRUCTION)
                                     ,documentSnapshot.getString(KEY_DISH_SERVING)
                                     ,ingredients);
-                            Log.d("ingre:", recipe.getIngredients().toString());
-                            recipes.add(recipe);
+                            data.add(recipe);
                         }
-                        fillView();
+                        filterWithStuffInTula();
                     }
                 });
 
     }
 
+    public void filterWithStuffInTula(){
+        if(isAdded()) {
+            SharedPreferences sharedPreferences = context.getSharedPreferences(getString(R.string.preference_file_key),Context.MODE_PRIVATE);
+            String json = sharedPreferences.getString(getString(R.string.preference_stored_stuff_key),null);
+            Gson gson = new Gson();
+            Type type = new TypeToken<ArrayList<Map<String,String>>>(){}.getType();
+            List<Map<String,String>> stuffsInTula = gson.fromJson(json,type);
+            if(json != null){
+                empty_tula_layout.setVisibility(View.INVISIBLE);
+                for(int i = 0;i < data.size();i++){
+                    for(int j = 0;j<data.get(i).getIngredients().size();j++){
+                        boolean found = false;
+                        for(int k = 0; k < stuffsInTula.size();k++){
+                            if(data.get(i).getIngredients().get(j).getName().toLowerCase().contains(stuffsInTula.get(k).get("iName").toLowerCase())){
+                                Log.d("dishes", data.get(i).getIngredients().get(j).getName().toLowerCase() + ", " + stuffsInTula.get(k).get("iName").toLowerCase());
+                                suggestedDishes.add(data.get(i));
+                                found = true;
+                                break;
+                            }
+                        }
+                        if(found){
+                            break;
+                        }
+                    }
+                }
+                fillView();
+            }
+        }
+    }
+
     public void fillView(){
-        DishesGridAdapter mAdapter = new DishesGridAdapter(getActivity(),recipes);
+        DishesGridAdapter mAdapter = new DishesGridAdapter(getActivity(),suggestedDishes);
         homeRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
         homeRecyclerView.setAdapter(mAdapter);
         mProgressBar.setVisibility(View.INVISIBLE);

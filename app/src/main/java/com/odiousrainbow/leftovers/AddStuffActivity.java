@@ -5,7 +5,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.ExpandableListAdapter;
@@ -16,7 +15,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.storage.StorageReference;
+import com.odiousrainbow.leftovers.Adapters.IngresCategoryListAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,4 +104,5 @@ public class AddStuffActivity extends AppCompatActivity {
         mypb.setVisibility(View.INVISIBLE);
         cateListView.setVisibility(View.VISIBLE);
     }
+
 }
