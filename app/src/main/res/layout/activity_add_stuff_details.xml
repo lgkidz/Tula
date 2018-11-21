@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddStuffDetailsActivity">
+    tools:context=".Activities.AddStuffDetailsActivity">
     <android.support.v7.widget.Toolbar
         app:titleTextColor="@color/white"
         android:id="@+id/my_toolbar"
@@ -89,7 +89,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Định lượng"
-                android:inputType="number"
+                android:inputType="number|numberDecimal"
                 android:maxLines="1"
                 android:textSize="22sp" />
         </android.support.design.widget.TextInputLayout>

@@ -1,6 +1,12 @@
 package com.odiousrainbow.leftovers.DataModel;
 
-public class Ingredient {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class Ingredient implements Serializable, Parcelable {
     private String name;
     private String quantity;
     private String unit;
@@ -49,5 +55,15 @@ public class Ingredient {
 
     public String toString(){
         return this.getQuantity() + " " + this.getUnit() + " " + this.getName();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
 }

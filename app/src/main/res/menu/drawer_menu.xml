@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/drawer_menu_home"
-        android:icon="@drawable/baseline_home_black_24dp"
-        android:title="Trang chủ"/>
-    <item android:id="@+id/drawer_menu_tula"
-        android:icon="@drawable/baseline_kitchen_black_24dp"
-        android:title="Tủ lạnh"/>
-    <item android:id="@+id/drawer_menu_cart"
-        android:icon="@drawable/baseline_shopping_cart_black_24dp"
-        android:title="Giỏ hàng"/>
-    <item android:id="@+id/drawer_menu_plan"
-        android:icon="@drawable/baseline_event_black_24dp"
-        android:title="Lịch nấu ăn"/>
-    <item android:id="@+id/drawer_menu_noti"
-        android:icon="@drawable/baseline_notifications_black_24dp"
-        android:title="Thông báo"/>
-    <item android:id="@+id/drawer_menu_fav"
-        android:icon="@drawable/ic_favorite_24dp"
-        android:title="Yêu thích"/>
+    <group
+        android:checkableBehavior="single">
+        <item android:id="@+id/drawer_menu_home"
+            android:icon="@drawable/baseline_home_black_24dp"
+            android:title="Trang chủ"/>
+        <item android:id="@+id/drawer_menu_tula"
+            android:icon="@drawable/baseline_kitchen_black_24dp"
+            android:title="Tủ lạnh"/>
+        <item android:id="@+id/drawer_menu_cart"
+            android:icon="@drawable/baseline_shopping_cart_black_24dp"
+            android:title="Giỏ hàng"/>
+        <item android:id="@+id/drawer_menu_plan"
+            android:icon="@drawable/baseline_event_black_24dp"
+            android:title="Lịch nấu ăn"/>
+        <item android:id="@+id/drawer_menu_noti"
+            android:icon="@drawable/baseline_notifications_black_24dp"
+            android:title="Thông báo"/>
+        <item android:id="@+id/drawer_menu_fav"
+            android:icon="@drawable/ic_favorite_24dp"
+            android:title="Yêu thích"/>
+    </group>
+
 </menu>

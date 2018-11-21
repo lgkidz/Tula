@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+    </android.support.v7.widget.Toolbar>
+
+    <ImageView
+        android:id="@+id/iv_food"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_below="@id/toolbar"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_default" />
+    <Button
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="16sp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/ic_favorite_border_24dp"
+        android:layout_alignTop="@+id/iv_food"
+        android:layout_alignRight="@+id/iv_food"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/iv_food"
+        android:background="@color/colorBlackOpacity"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/tv_recipe_cooking_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/ic_time"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="@string/recipe_cooking_time_suffix"
+            android:textColor="@color/colorWhite" />
+
+        <TextView
+            android:id="@+id/tv_recipe_serving"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/ic_people"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="@string/recipe_serving_suffix"
+            android:textColor="@color/colorWhite" />
+
+        <TextView
+            android:id="@+id/tv_recipe_total_cal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/ic_kal"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="@string/recipe_total_cal_suffix"
+            android:textColor="@color/colorWhite" />
+
+    </LinearLayout>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_food"
+        android:background="@color/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:tabSelectedTextColor="@android:color/white"
+        app:tabTextColor="@color/colorWhite"></android.support.design.widget.TabLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/tab_layout"></android.support.v4.view.ViewPager>
+</RelativeLayout>

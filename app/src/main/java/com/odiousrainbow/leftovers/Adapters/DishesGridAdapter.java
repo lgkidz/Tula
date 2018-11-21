@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.odiousrainbow.leftovers.DishDetailsActivity;
+import com.odiousrainbow.leftovers.Activities.DishDetailsActivity;
 import com.odiousrainbow.leftovers.R;
 import com.odiousrainbow.leftovers.DataModel.Recipe;
 import com.squareup.picasso.Picasso;
@@ -61,7 +61,8 @@ public class DishesGridAdapter extends RecyclerView.Adapter<DishesGridAdapter.Di
             @Override
             public void onClick(View v) {
                 Intent dishDetailsIntent = new Intent(mContext,DishDetailsActivity.class);
-                dishDetailsIntent.putExtra("name",mData.get(i).getName());
+                Recipe r = mData.get(i);
+                dishDetailsIntent.putExtra("dish",r);
                 mContext.startActivity(dishDetailsIntent);
             }
         });

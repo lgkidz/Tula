@@ -1,4 +1,4 @@
-package com.odiousrainbow.leftovers;
+package com.odiousrainbow.leftovers.Activities;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -22,11 +22,12 @@ import com.odiousrainbow.leftovers.HomescreenFragments.HomeFragment;
 import com.odiousrainbow.leftovers.HomescreenFragments.NotiFragment;
 import com.odiousrainbow.leftovers.HomescreenFragments.PlanFragment;
 import com.odiousrainbow.leftovers.HomescreenFragments.TulaFragment;
+import com.odiousrainbow.leftovers.R;
 
 
 public class MainActivity extends AppCompatActivity {
     private Toolbar myToolbar;
-    private BottomNavigationView mBottomNavigationBar;
+    public BottomNavigationView mBottomNavigationBar;
     private FrameLayout mMainFrame;
     private NavigationView navigationView;
     private HomeFragment homeFragment;
@@ -156,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(UpgradeToProIntent);
         }
         else if(item.getItemId() == R.id.menu_setting){
-            Intent settingIntent = new Intent(MainActivity.this,SettingActivity.class);
+            Intent settingIntent = new Intent(MainActivity.this,SettingsActivity.class);
             startActivity(settingIntent);
         }
         else if(item.getItemId() == R.id.menu_feedback){

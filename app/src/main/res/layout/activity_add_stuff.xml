@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".AddStuffActivity">
+    tools:context=".Activities.AddStuffActivity">
     <android.support.v7.widget.Toolbar
         app:titleTextColor="@color/white"
         android:id="@+id/my_toolbar"

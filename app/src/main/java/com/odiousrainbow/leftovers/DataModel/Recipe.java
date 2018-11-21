@@ -1,30 +1,27 @@
 package com.odiousrainbow.leftovers.DataModel;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Recipe {
+@SuppressWarnings("serial")
+public class Recipe implements Serializable {
     private String imageUrl;
     private String name;
-
-    public String getServing() {
-        return serving;
-    }
-
-    public void setServing(String serving) {
-        this.serving = serving;
-    }
-
     private String instruction;
     private String serving;
     private List<Ingredient> ingredients;
+    private String cookingTime;
+    private String totalCal;
 
     public  Recipe(){}
 
-    public Recipe(String imageUrl, String name, String instruction,String serving, List<Ingredient> ingredients){
+    public Recipe(String imageUrl, String name, String instruction,String serving,String cookingTime,String totalCal, List<Ingredient> ingredients){
         this.imageUrl = imageUrl;
         this.name = name;
         this.instruction = instruction.replace("#", "\n");
         this.serving = serving;
+        this.cookingTime = cookingTime;
+        this.totalCal = totalCal;
         this.ingredients = ingredients;
     }
 
@@ -58,5 +55,29 @@ public class Recipe {
 
     public void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public String getServing() {
+        return serving;
+    }
+
+    public void setServing(String serving) {
+        this.serving = serving;
+    }
+
+    public String getCookingTime() {
+        return cookingTime;
+    }
+
+    public void setCookingTime(String cookingTime) {
+        this.cookingTime = cookingTime;
+    }
+
+    public String getTotalCal() {
+        return totalCal;
+    }
+
+    public void setTotalCal(String totalCal) {
+        this.totalCal = totalCal;
     }
 }

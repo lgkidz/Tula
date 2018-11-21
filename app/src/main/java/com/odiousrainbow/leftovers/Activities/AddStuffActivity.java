@@ -1,4 +1,4 @@
-package com.odiousrainbow.leftovers;
+package com.odiousrainbow.leftovers.Activities;
 
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
@@ -16,6 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.odiousrainbow.leftovers.Adapters.IngresCategoryListAdapter;
+import com.odiousrainbow.leftovers.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;

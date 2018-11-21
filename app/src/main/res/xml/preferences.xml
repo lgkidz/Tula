@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <SwitchPreference
+        android:key="show_notification"
+        android:title="Thống báo"
+        android:summary="Nhận thông báo nguyên liệu hết hạn"
+        android:defaultValue="true"/>
+    <Preference
+        android:key="app_version"
+        android:title="App Version"
+        android:summary="1.0.0"></Preference>
+    <Preference
+        android:key="reset"
+        android:title="Cài đặt lại"
+        android:summary="Cài đặt lại ứng dụng như ban đầu"></Preference>
+</PreferenceScreen>

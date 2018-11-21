@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:title="Nâng cấp"
+        android:id="@+id/menu_up_to_pro"
+        app:showAsAction="never"/>
+    <item android:title="Cài đặt"
+        android:id="@+id/menu_setting"
+        app:showAsAction="never"/>
+    <item android:title="Đánh giá"
+        android:id="@+id/menu_feedback"
+        app:showAsAction="never"/>
+</menu>

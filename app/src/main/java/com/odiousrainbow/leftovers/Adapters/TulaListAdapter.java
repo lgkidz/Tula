@@ -2,12 +2,15 @@ package com.odiousrainbow.leftovers.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.odiousrainbow.leftovers.R;
@@ -20,7 +23,7 @@ import java.util.Map;
 public class TulaListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context mContext;
     private List<Map<String,String>> mRawData;
-    private List<Map<String,String>> mData;
+    public List<Map<String,String>> mData;
     private List<String> headerList;
     Map<String,Integer> totalitemsPerHeader;
     private static final int TYPE_HEADER = 0;
@@ -107,6 +110,16 @@ public class TulaListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return mData.size();
     }
 
+    public void removeItem(int position){
+        mData.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void restoreItem(Map<String,String> item, int position){
+        mData.add(position,item);
+        notifyItemInserted(position);
+    }
+
     public class TulaStuffHeaderViewHolder extends RecyclerView.ViewHolder{
         private TextView header;
         public TulaStuffHeaderViewHolder(@NonNull View itemView) {
@@ -116,14 +129,18 @@ public class TulaListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public class TulaStuffItemViewHolder extends RecyclerView.ViewHolder{
-        private TextView itemName;
-        private TextView itemQuan;
-        private ImageView itemInfoButton;
-        private String iExpDate;
-        private String iNoti;
+        public ConstraintLayout frontLayout;
+        public RelativeLayout backLayout;
+        public TextView itemName;
+        public TextView itemQuan;
+        public ImageView itemInfoButton;
+        public String iExpDate;
+        public String iNoti;
 
         public TulaStuffItemViewHolder(@NonNull View itemView) {
             super(itemView);
+            frontLayout = itemView.findViewById(R.id.tula_stuff_item_layout);
+            backLayout = itemView.findViewById(R.id.tula_stuff_item_background);
             itemName = itemView.findViewById(R.id.tula_stuff_item_name);
             itemQuan = itemView.findViewById(R.id.tula_stuff_item_quan);
             itemInfoButton = itemView.findViewById(R.id.tula_stuff_item_info);

@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".HomescreenFragments.TulaFragment">
+    tools:context=".HomescreenFragments.TulaFragment"
+    android:id="@+id/tula_layout"
+    android:background="@color/white">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/tula_list_layout"
         android:layout_width="match_parent"

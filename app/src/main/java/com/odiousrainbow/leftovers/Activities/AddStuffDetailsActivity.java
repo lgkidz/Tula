@@ -1,4 +1,4 @@
-package com.odiousrainbow.leftovers;
+package com.odiousrainbow.leftovers.Activities;
 
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
@@ -11,7 +11,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +25,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.odiousrainbow.leftovers.R;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
@@ -170,7 +170,7 @@ public class AddStuffDetailsActivity extends AppCompatActivity {
         if(!et_quan.getText().toString().equals("")){
             new AlertDialog.Builder(this).setTitle("Thêm nguyên liệu")
                     .setMessage("Bạn đã chắc chắn với những gì đã nhập chưa?")
-                    .setPositiveButton("Oke, lưu lại", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("Oke", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key),MODE_PRIVATE);
@@ -207,7 +207,7 @@ public class AddStuffDetailsActivity extends AppCompatActivity {
                             startActivity(backToTulaIntent);
                         }
                     })
-                    .setNegativeButton("Đợi đã!",null)
+                    .setNegativeButton("Quay lại",null)
                     .show();
         }
         else{

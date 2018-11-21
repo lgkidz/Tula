@@ -25,7 +25,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.odiousrainbow.leftovers.Adapters.DishesGridAdapter;
-import com.odiousrainbow.leftovers.AddStuffActivity;
+import com.odiousrainbow.leftovers.Activities.AddStuffActivity;
 import com.odiousrainbow.leftovers.DataModel.Ingredient;
 import com.odiousrainbow.leftovers.DataModel.Recipe;
 import com.odiousrainbow.leftovers.R;
@@ -57,6 +57,8 @@ public class HomeFragment extends Fragment {
     private final String KEY_DISH_INSTRUCTION = "instr";
     private final String KEY_DISH_IMAGE_URL = "image";
     private final String KEY_DISH_SERVING = "serve";
+    private final String KEY_DISH_COOKING_TIME = "cooktime";
+    private final String KEY_DISH_TOTAL_CAL = "totalcal";
 
     private final String KEY_INGREDIENTS_NAME = "name";
     private final String KEY_INGREDIENTS = "ingres";
@@ -102,7 +104,7 @@ public class HomeFragment extends Fragment {
         if(isAdded()){
             SharedPreferences sharedPreferences = context.getSharedPreferences(getString(R.string.preference_file_key),Context.MODE_PRIVATE);
             String json = sharedPreferences.getString(getString(R.string.preference_stored_stuff_key),null);
-            if(json == null){
+            if(json == null || json.equals("[]")){
                 empty_tula_layout.setVisibility(View.VISIBLE);
             }
         }
@@ -132,6 +134,8 @@ public class HomeFragment extends Fragment {
                                     ,documentSnapshot.getString(KEY_DISH_NAME)
                                     ,documentSnapshot.getString(KEY_DISH_INSTRUCTION)
                                     ,documentSnapshot.getString(KEY_DISH_SERVING)
+                                    ,documentSnapshot.getString(KEY_DISH_COOKING_TIME)
+                                    ,documentSnapshot.getString(KEY_DISH_TOTAL_CAL)
                                     ,ingredients);
                             data.add(recipe);
                         }
@@ -148,13 +152,16 @@ public class HomeFragment extends Fragment {
             Gson gson = new Gson();
             Type type = new TypeToken<ArrayList<Map<String,String>>>(){}.getType();
             List<Map<String,String>> stuffsInTula = gson.fromJson(json,type);
-            if(json != null){
+
+            if(json != null && !json.equals("[]")){
                 empty_tula_layout.setVisibility(View.INVISIBLE);
                 for(int i = 0;i < data.size();i++){
                     for(int j = 0;j<data.get(i).getIngredients().size();j++){
                         boolean found = false;
                         for(int k = 0; k < stuffsInTula.size();k++){
-                            if(data.get(i).getIngredients().get(j).getName().toLowerCase().contains(stuffsInTula.get(k).get("iName").toLowerCase())){
+                            String[] stringNme = stuffsInTula.get(k).get("iName").toLowerCase().split(" ");
+                            String regex = stringNme[0] + "(.*)" + stringNme[stringNme.length-1];
+                            if(data.get(i).getIngredients().get(j).getName().toLowerCase().matches(stringNme[0] + "(.*)") || data.get(i).getIngredients().get(j).getName().toLowerCase().matches("(.*)" + stringNme[(stringNme.length-1)/2] + "(.*)" + stringNme[stringNme.length-1])){
                                 Log.d("dishes", data.get(i).getIngredients().get(j).getName().toLowerCase() + ", " + stuffsInTula.get(k).get("iName").toLowerCase());
                                 suggestedDishes.add(data.get(i));
                                 found = true;
