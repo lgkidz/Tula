@@ -10,7 +10,7 @@
         android:title="App Version"
         android:summary="1.0.0"></Preference>
     <Preference
-        android:key="reset"
+        android:key="reset_app"
         android:title="Cài đặt lại"
         android:summary="Cài đặt lại ứng dụng như ban đầu"></Preference>
 </PreferenceScreen>

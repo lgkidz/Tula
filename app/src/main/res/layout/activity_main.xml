@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/drawer_layout"
-    tools:context=".Activities.MainActivity">
+    tools:context=".Activities.MainActivity"
+    android:animateLayoutChanges="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -37,8 +38,7 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="?attr/actionBarSize"
-            >
+            android:layout_marginTop="?attr/actionBarSize">
 
         </FrameLayout>
         <android.support.v7.widget.Toolbar
@@ -51,7 +51,22 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </RelativeLayout>
+    <com.miguelcatalan.materialsearchview.MaterialSearchView
+        android:id="@+id/search_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </com.miguelcatalan.materialsearchview.MaterialSearchView>
+    <ListView
+        android:id="@+id/search_list_view"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="#D8D8D8"
+        android:dividerHeight="1dp"
+        android:background="@color/colorWhite"
+        android:visibility="invisible">
 
+    </ListView>
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation_view"
         app:headerLayout="@layout/drawer_header"
@@ -61,10 +76,10 @@
         app:itemTextColor="@color/darkGrey"
         app:itemIconTint="@color/darkGrey"
         app:menu="@menu/drawer_menu"
-        android:layout_gravity="start"
-        >
+        android:layout_gravity="start">
 
     </android.support.design.widget.NavigationView>
+
 
 
 </android.support.v4.widget.DrawerLayout>

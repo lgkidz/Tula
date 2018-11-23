@@ -159,9 +159,8 @@ public class HomeFragment extends Fragment {
                     for(int j = 0;j<data.get(i).getIngredients().size();j++){
                         boolean found = false;
                         for(int k = 0; k < stuffsInTula.size();k++){
-                            String[] stringNme = stuffsInTula.get(k).get("iName").toLowerCase().split(" ");
-                            String regex = stringNme[0] + "(.*)" + stringNme[stringNme.length-1];
-                            if(data.get(i).getIngredients().get(j).getName().toLowerCase().matches(stringNme[0] + "(.*)") || data.get(i).getIngredients().get(j).getName().toLowerCase().matches("(.*)" + stringNme[(stringNme.length-1)/2] + "(.*)" + stringNme[stringNme.length-1])){
+                            String stringNme = stuffsInTula.get(k).get("iName").toLowerCase();
+                            if(data.get(i).getIngredients().get(j).getName().toLowerCase().contains(stringNme)){
                                 Log.d("dishes", data.get(i).getIngredients().get(j).getName().toLowerCase() + ", " + stuffsInTula.get(k).get("iName").toLowerCase());
                                 suggestedDishes.add(data.get(i));
                                 found = true;

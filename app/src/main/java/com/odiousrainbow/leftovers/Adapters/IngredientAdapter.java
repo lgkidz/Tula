@@ -38,7 +38,13 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
         String json = sharedPreferences.getString(mContext.getString(R.string.preference_stored_stuff_key),null);
         gson = new Gson();
         Type type = new TypeToken<ArrayList<Map<String,String>>>(){}.getType();
-        stuffsInTula = gson.fromJson(json,type);
+        if(json != null){
+            stuffsInTula = gson.fromJson(json,type);
+        }
+        else{
+            stuffsInTula = new ArrayList<>();
+        }
+
     }
 
     @NonNull

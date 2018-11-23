@@ -2,6 +2,7 @@ package com.odiousrainbow.leftovers.DataModel;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 @SuppressWarnings("serial")
 public class Recipe implements Serializable {
@@ -80,4 +81,31 @@ public class Recipe implements Serializable {
     public void setTotalCal(String totalCal) {
         this.totalCal = totalCal;
     }
+
+    @Override
+    public String toString() {
+        return "Recipe{" +
+                "imageUrl='" + imageUrl + '\'' +
+                ", name='" + name + '\'' +
+                ", serving='" + serving + '\'' +
+                ", ingredients=" + ingredients +
+                ", cookingTime='" + cookingTime + '\'' +
+                ", totalCal='" + totalCal + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Recipe recipe = (Recipe) o;
+        boolean eqs = false;
+        if(this.name.equals(((Recipe) o).name) &&
+                this.imageUrl.equals(((Recipe) o).imageUrl) &&
+                this.instruction.equals(((Recipe) o).instruction)){
+            eqs = true;
+        }
+        return eqs;
+    }
+
 }

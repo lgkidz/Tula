@@ -86,7 +86,7 @@ public class TulaFragment extends Fragment implements TulaListRecyclerItemTouchH
         gson = new Gson();
         Type type = new TypeToken<ArrayList<Map<String,String>>>(){}.getType();
         stuffsInTula = gson.fromJson(json,type);
-        if(json == null){
+        if(json == null || json.equals("[]")){
             empty_tula_layout.setVisibility(View.VISIBLE);
             fab.setVisibility(View.INVISIBLE);
         }

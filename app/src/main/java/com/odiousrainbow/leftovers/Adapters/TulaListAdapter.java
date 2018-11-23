@@ -1,6 +1,7 @@
 package com.odiousrainbow.leftovers.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.odiousrainbow.leftovers.Activities.EditStuffDetailsActivity;
 import com.odiousrainbow.leftovers.R;
 
 import java.util.ArrayList;
@@ -87,13 +89,27 @@ public class TulaListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ((TulaStuffHeaderViewHolder) viewHolder).header.setText(header);
         }
         else if(viewHolder instanceof TulaStuffItemViewHolder){
-            String iName = mData.get(i).get("iName");
-            String iQuan = mData.get(i).get("iQuan");
-            String iUnit = mData.get(i).get("iUnit");
-            String iExpDate = mData.get(i).get("iExpDate");
-            String iNoti = mData.get(i).get("iNoti");
+            final String iCate = mData.get(i).get("iCate");
+            final String iName = mData.get(i).get("iName");
+            final String iQuan = mData.get(i).get("iQuan");
+            final String iUnit = mData.get(i).get("iUnit");
+            final String iExpDate = mData.get(i).get("iExpDate");
+            final String iNoti = mData.get(i).get("iNoti");
             Log.d("thedamnlist", iName);
             ((TulaStuffItemViewHolder) viewHolder).setData(iName,iQuan,iUnit,iExpDate,iNoti);
+            ((TulaStuffItemViewHolder) viewHolder).itemInfoButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intentEditStuffDetails = new Intent(mContext,EditStuffDetailsActivity.class);
+                    intentEditStuffDetails.putExtra("ingreName",iName);
+                    intentEditStuffDetails.putExtra("ingreCate",iCate);
+                    intentEditStuffDetails.putExtra("ingreQuan",iQuan);
+                    intentEditStuffDetails.putExtra("ingreUnit",iUnit);
+                    intentEditStuffDetails.putExtra("ingreExpDate",iExpDate);
+                    intentEditStuffDetails.putExtra("ingreNoti",iNoti);
+                    mContext.startActivity(intentEditStuffDetails);
+                }
+            });
         }
     }
 

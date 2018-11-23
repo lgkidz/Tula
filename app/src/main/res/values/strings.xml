@@ -3,6 +3,7 @@
     <string name="preference_file_key">com.odiousrainbow.leftovers.PREFERENCE_FILE_KEY</string>
     <string name="preference_stored_stuff_key">ThingsInMyTula</string>
     <string name="prefernece_cart_key">ThingsInMyCart</string>
+    <string name="prefernece_favorite_key">MyFavoritesDishes</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="feedback_activity_title">Đánh giá</string>
@@ -11,7 +12,7 @@
     <string name="add_stuff_activity">Thêm Nguyên liệu</string>
     <string name="cost_per_month">42,000đ/tháng</string>
     <string name="cost_per_year">423,000đ/năm</string>
-	<string name="recipe_cooking_time_suffix">Phút</string>
+    <string name="recipe_cooking_time_suffix">Phút</string>
     <string name="recipe_serving_suffix">Người</string>
     <string name="recipe_total_cal_suffix">Cal</string>
     <string name="tv_help">Help</string>

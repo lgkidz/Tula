@@ -63,7 +63,12 @@ public class FragmentIngredient extends Fragment {
         String json = sharedPreferences.getString(getActivity().getString(R.string.preference_stored_stuff_key),null);
         gson = new Gson();
         Type type = new TypeToken<ArrayList<Map<String,String>>>(){}.getType();
-        stuffsInTula = gson.fromJson(json,type);
+        if(json != null){
+            stuffsInTula = gson.fromJson(json,type);
+        }
+        else{
+            stuffsInTula = new ArrayList<>();
+        }
 
         String cartJson = sharedPreferences.getString(getString(R.string.prefernece_cart_key),null);
         if(cartJson!= null){

@@ -1,6 +1,9 @@
 package com.odiousrainbow.leftovers.Activities;
 
+import android.animation.LayoutTransition;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
@@ -12,17 +15,36 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import com.odiousrainbow.leftovers.DataModel.Ingredient;
+import com.odiousrainbow.leftovers.DataModel.Recipe;
 import com.odiousrainbow.leftovers.HomescreenFragments.CartFragment;
 import com.odiousrainbow.leftovers.HomescreenFragments.HomeFragment;
 import com.odiousrainbow.leftovers.HomescreenFragments.NotiFragment;
 import com.odiousrainbow.leftovers.HomescreenFragments.PlanFragment;
 import com.odiousrainbow.leftovers.HomescreenFragments.TulaFragment;
 import com.odiousrainbow.leftovers.R;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -37,6 +59,25 @@ public class MainActivity extends AppCompatActivity {
     private NotiFragment notiFragment;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    private MaterialSearchView materialSearchView;
+    private ListView listView;
+    private ArrayAdapter searchAdapter;
+    private FirebaseFirestore db;
+    private List<Recipe> Recipedata = new ArrayList<>();
+    private List<String> searchData = new ArrayList<>();
+    private final String KEY_COLLECTION = "dishes";
+    private final String KEY_DISH_NAME = "name";
+    private final String KEY_DISH_INSTRUCTION = "instr";
+    private final String KEY_DISH_IMAGE_URL = "image";
+    private final String KEY_DISH_SERVING = "serve";
+    private final String KEY_DISH_COOKING_TIME = "cooktime";
+    private final String KEY_DISH_TOTAL_CAL = "totalcal";
+
+    private final String KEY_INGREDIENTS_NAME = "name";
+    private final String KEY_INGREDIENTS = "ingres";
+    private final String KEY_INGREDIENTS_QUANTITY = "quantity";
+    private final String KEY_INGREDIENTS_UNIT = "unit";
+    private final String KEY_INGREDIENTS_SPICE = "spice";
 
 
     @Override
@@ -51,15 +92,84 @@ public class MainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         myToolbar.setLogo(R.drawable.inapplogo);
+        materialSearchView = findViewById(R.id.search_view);
+        listView = findViewById(R.id.search_list_view);
+        db = FirebaseFirestore.getInstance();
+        getSearchData();
+
+
+        materialSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+               if(newText != null && !newText.isEmpty()){
+                   List<String> foundList = new ArrayList<>();
+                   for(String item:searchData){
+                       if(item.toLowerCase().contains(newText.toLowerCase())){
+                           foundList.add(item);
+                       }
+                   }
+                    if(foundList.size() > 0){
+                        searchAdapter = new ArrayAdapter(MainActivity.this,android.R.layout.simple_list_item_1,foundList);
+                        listView.setAdapter(searchAdapter);
+                        listView.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        listView.setVisibility(View.INVISIBLE);
+                    }
+               }
+               else{
+                   listView.setVisibility(View.INVISIBLE);
+               }
+
+               return true;
+            }
+        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String itemName =  listView.getItemAtPosition(position).toString();
+                for(Recipe r : Recipedata){
+                    if(r.getName().equals(itemName)){
+                        Intent intentDiskDetails = new Intent(MainActivity.this,DishDetailsActivity.class);
+                        intentDiskDetails.putExtra("dish",r);
+                        startActivity(intentDiskDetails);
+                        break;
+                    }
+                }
+            }
+        });
 
         mBottomNavigationBar = findViewById(R.id.bottom_nav_bar);
-
 
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout, R.string.drawer_open,R.string.drawer_close);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
+        LayoutTransition lt = (mDrawerLayout).getLayoutTransition();
+        lt.disableTransitionType(LayoutTransition.APPEARING);
+        lt.disableTransitionType(LayoutTransition.DISAPPEARING);
 
+        materialSearchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+                LayoutTransition lt = (mDrawerLayout).getLayoutTransition();
+                lt.enableTransitionType(LayoutTransition.APPEARING);
+                lt.enableTransitionType(LayoutTransition.DISAPPEARING);
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                listView.setVisibility(View.INVISIBLE);
+                LayoutTransition lt = (mDrawerLayout).getLayoutTransition();
+                lt.disableTransitionType(LayoutTransition.APPEARING);
+                lt.disableTransitionType(LayoutTransition.DISAPPEARING);
+            }
+        });
         navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -86,7 +196,8 @@ public class MainActivity extends AppCompatActivity {
                         mDrawerLayout.closeDrawer(Gravity.START,true);
                         return true;
                     case R.id.drawer_menu_fav:
-
+                        Intent favIntent = new Intent(MainActivity.this,FavoriteDishesActivity.class);
+                        startActivity(favIntent);
                         mDrawerLayout.closeDrawer(Gravity.START,true);
                         return true;
                     default:
@@ -144,6 +255,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu,menu);
+        MenuItem searchItem = menu.findItem(R.id.menu_search);
+        materialSearchView.setMenuItem(searchItem);
         return true;
     }
 
@@ -165,6 +278,51 @@ public class MainActivity extends AppCompatActivity {
             startActivity(feedbackIntent);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(materialSearchView.isSearchOpen()){
+            materialSearchView.closeSearch();
+        }
+        else{
+            super.onBackPressed();
+        }
+    }
+
+
+
+    public void getSearchData(){
+        db.collection(KEY_COLLECTION)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<Map<String,Object>> m;
+                        for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
+                            List<Ingredient> ingredients = new ArrayList<>();
+                            m =  (List<Map<String,Object>>) documentSnapshot.get(KEY_INGREDIENTS);
+                            for (Map<String,Object> i : m){
+                                String name = (String) i.get(KEY_INGREDIENTS_NAME);
+                                String quantity = (String) i.get(KEY_INGREDIENTS_QUANTITY);
+                                String unit = (String) i.get(KEY_INGREDIENTS_UNIT);
+                                Boolean isSpice = (Boolean) i.get(KEY_INGREDIENTS_SPICE);
+                                Ingredient ingredient = new Ingredient(name,quantity,unit,isSpice);
+                                ingredients.add(ingredient);
+                            }
+                            Recipe recipe = new Recipe(documentSnapshot.getString(KEY_DISH_IMAGE_URL)
+                                    ,documentSnapshot.getString(KEY_DISH_NAME)
+                                    ,documentSnapshot.getString(KEY_DISH_INSTRUCTION)
+                                    ,documentSnapshot.getString(KEY_DISH_SERVING)
+                                    ,documentSnapshot.getString(KEY_DISH_COOKING_TIME)
+                                    ,documentSnapshot.getString(KEY_DISH_TOTAL_CAL)
+                                    ,ingredients);
+                            Recipedata.add(recipe);
+                            searchData.add(recipe.getName());
+
+                        }
+                    }
+                });
     }
 
 }

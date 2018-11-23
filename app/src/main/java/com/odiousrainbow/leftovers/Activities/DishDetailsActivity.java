@@ -1,8 +1,11 @@
 package com.odiousrainbow.leftovers.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -10,16 +13,24 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.odiousrainbow.leftovers.R;
 import com.odiousrainbow.leftovers.Adapters.ViewPagerAdapter;
 import com.odiousrainbow.leftovers.DataModel.Recipe;
 import com.squareup.picasso.Picasso;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DishDetailsActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
 
@@ -49,13 +60,28 @@ public class DishDetailsActivity extends AppCompatActivity implements ViewPager.
     private TextView tvCookingTime;
     private TextView tvServing;
     private TextView tvTotalCal;
+    private Button btn_addToFav;
+
+    private SharedPreferences sharedPreferences;
+    private Gson gson;
+    private Type type;
+    private SharedPreferences.Editor editor;
+    private List<Recipe> mFavoriteDishes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dish_detail);
         mStorageRef = FirebaseStorage.getInstance().getReference(KEY_IMAGES_FOLDER);
+        mFavoriteDishes = new ArrayList<>();
+        sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key),Context.MODE_PRIVATE);
 
+        gson = new Gson();
+        type = new TypeToken<ArrayList<Recipe>>(){}.getType();
+        String json = sharedPreferences.getString(getString(R.string.prefernece_favorite_key),null);
+        if(json != null && !json.equals("[]")){
+            mFavoriteDishes = gson.fromJson(json,type);
+        }
         getData();
         initViews();
         addEvents();
@@ -65,7 +91,6 @@ public class DishDetailsActivity extends AppCompatActivity implements ViewPager.
     private void getData() {
         Intent intent = getIntent();
         currentRecipe = (Recipe) intent.getSerializableExtra("dish");
-        Log.d(TAG, currentRecipe.getIngredients().toString());
     }
 
     private void initViews() {
@@ -74,6 +99,7 @@ public class DishDetailsActivity extends AppCompatActivity implements ViewPager.
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(currentRecipe.getName());
         ivDish = findViewById(R.id.iv_food);
+        btn_addToFav = findViewById(R.id.btn_add_to_fav);
         tvCookingTime = findViewById(R.id.tv_recipe_cooking_time);
         tvServing = findViewById(R.id.tv_recipe_serving);
         tvTotalCal = findViewById(R.id.tv_recipe_total_cal);
@@ -106,6 +132,36 @@ public class DishDetailsActivity extends AppCompatActivity implements ViewPager.
                 Picasso.get().load(uri).into(ivDish);
             }
         });
+
+        if(mFavoriteDishes.contains(currentRecipe)){
+            btn_addToFav.setBackgroundResource(R.drawable.ic_favorite_24dp);
+        }
+        else{
+            btn_addToFav.setBackgroundResource(R.drawable.ic_favorite_border_24dp);
+        }
+
+        btn_addToFav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mFavoriteDishes.contains(currentRecipe)){
+                    mFavoriteDishes.remove(currentRecipe);
+                    editor = sharedPreferences.edit();
+                    String toJson = gson.toJson(mFavoriteDishes);
+                    editor.putString(getString(R.string.prefernece_favorite_key),toJson);
+                    editor.apply();
+                    btn_addToFav.setBackgroundResource(R.drawable.ic_favorite_border_24dp);
+                }
+                else{
+                    mFavoriteDishes.add(currentRecipe);
+                    editor = sharedPreferences.edit();
+                    String toJson = gson.toJson(mFavoriteDishes);
+                    editor.putString(getString(R.string.prefernece_favorite_key),toJson);
+                    editor.apply();
+                    btn_addToFav.setBackgroundResource(R.drawable.ic_favorite_24dp);
+                }
+            }
+        });
+
     }
 
     private void initViewPager() {
