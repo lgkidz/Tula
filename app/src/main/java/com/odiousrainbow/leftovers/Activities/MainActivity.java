@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -35,6 +37,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.odiousrainbow.leftovers.DataModel.Ingredient;
 import com.odiousrainbow.leftovers.DataModel.Recipe;
+import com.odiousrainbow.leftovers.Helpers.BottomNavigationViewBehavior;
 import com.odiousrainbow.leftovers.HomescreenFragments.CartFragment;
 import com.odiousrainbow.leftovers.HomescreenFragments.HomeFragment;
 import com.odiousrainbow.leftovers.HomescreenFragments.NotiFragment;
@@ -91,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        myToolbar.setLogo(R.drawable.inapplogo);
+        //myToolbar.setLogo(R.drawable.inapplogo);
         materialSearchView = findViewById(R.id.search_view);
         listView = findViewById(R.id.search_list_view);
         db = FirebaseFirestore.getInstance();
@@ -145,7 +148,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mBottomNavigationBar = findViewById(R.id.bottom_nav_bar);
-
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mBottomNavigationBar.getLayoutParams();
+        layoutParams.setBehavior(new BottomNavigationViewBehavior());
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout, R.string.drawer_open,R.string.drawer_close);
         mDrawerLayout.addDrawerListener(mDrawerToggle);
@@ -215,22 +219,32 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.bottom_nav_home:
                         homeFragment = new HomeFragment();
                         setFragment(homeFragment);
+                        //myToolbar.setLogo(R.drawable.inapplogo);
+                        //getSupportActionBar().setLogo(R.drawable.inapplogo);
+                        getSupportActionBar().setTitle(getString(R.string.app_name));
                         return true;
                     case R.id.bottom_nav_tula:
                         tulaFragment = new TulaFragment();
                         setFragment(tulaFragment);
+                        getSupportActionBar().setTitle(getString(R.string.tula_title));
                         return true;
                     case R.id.bottom_nav_cart:
                         cartFragment = new CartFragment();
                         setFragment(cartFragment);
+                        getSupportActionBar().setTitle(getString(R.string.shopping_list_title));
                         return true;
                     case R.id.bottom_nav_plan:
-                        planFragment = new PlanFragment();
-                        setFragment(planFragment);
+                        Intent UpgradeToProIntent = new Intent(MainActivity.this, UpgradeToProActivity.class);
+                        startActivity(UpgradeToProIntent);
+                        //planFragment = new PlanFragment();
+                        //setFragment(planFragment);
+                        //getSupportActionBar().setTitle(getString(R.string.plan_title));
+                        mBottomNavigationBar.setSelectedItemId(R.id.bottom_nav_home);
                         return true;
                     case R.id.bottom_nav_noti:
                         notiFragment = new NotiFragment();
                         setFragment(notiFragment);
+                        getSupportActionBar().setTitle(getString(R.string.notification_title));
                         return true;
                     default:
                         return false;
@@ -239,6 +253,7 @@ public class MainActivity extends AppCompatActivity {
         });
         if(null == savedInstanceState) {
             setFragment(new HomeFragment());
+
         }
         Intent intent = getIntent();
         if(intent.hasExtra("navigateToTula")){
@@ -284,6 +299,12 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if(materialSearchView.isSearchOpen()){
             materialSearchView.closeSearch();
+        }
+        else if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        }
+        else if(mBottomNavigationBar.getSelectedItemId() != R.id.bottom_nav_home){
+            mBottomNavigationBar.setSelectedItemId(R.id.bottom_nav_home);
         }
         else{
             super.onBackPressed();

@@ -8,7 +8,8 @@
     tools:context=".Activities.MainActivity"
     android:animateLayoutChanges="true">
 
-    <RelativeLayout
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/coordinator_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -20,6 +21,7 @@
             app:menu="@menu/bottom_nav_items"
             app:labelVisibilityMode="unlabeled"
             android:animateLayoutChanges="true"
+            android:layout_gravity="bottom"
             android:background="@android:color/white"
             app:elevation="16dp">
 
@@ -50,7 +52,7 @@
             android:elevation="4dp"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-    </RelativeLayout>
+    </android.support.design.widget.CoordinatorLayout>
     <com.miguelcatalan.materialsearchview.MaterialSearchView
         android:id="@+id/search_view"
         android:layout_width="match_parent"

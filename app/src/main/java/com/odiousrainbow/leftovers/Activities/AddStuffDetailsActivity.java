@@ -1,6 +1,9 @@
 package com.odiousrainbow.leftovers.Activities;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,6 +28,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.odiousrainbow.leftovers.Helpers.AlarmNotificationReceiver;
 import com.odiousrainbow.leftovers.R;
 
 import java.lang.reflect.Type;
@@ -48,6 +52,7 @@ public class AddStuffDetailsActivity extends AppCompatActivity {
     private Switch noti_switch;
     private TextInputLayout textInputLayoutExpDate;
     private DatePickerDialog.OnDateSetListener onDateSetListener;
+    private Calendar expDate;
 
     private List<Map<String,String>> stuffs;
 
@@ -87,7 +92,9 @@ public class AddStuffDetailsActivity extends AppCompatActivity {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_YEAR, 7);
+        calendar.add(Calendar.DAY_OF_YEAR, 2);
+        exp_date_text.setText("Dùng trong 2 ngày");
+        expDate = calendar;
         Date expDateRaw = calendar.getTime();
         String expDateString = dateFormat.format(expDateRaw);
         et_exp_date.setText(expDateString);
@@ -99,7 +106,7 @@ public class AddStuffDetailsActivity extends AppCompatActivity {
                 String monthzeroOrNot = month+1<10?"0":"";
                 et_exp_date.setText(dayzeroOrNot + dayOfMonth + "/" + monthzeroOrNot + (month + 1) + "/" + year);
                 Calendar curDate = Calendar.getInstance();
-                Calendar expDate = Calendar.getInstance();
+                expDate = Calendar.getInstance();
 
                 expDate.set(year,month,dayOfMonth);
                 long diff = expDate.getTimeInMillis() - curDate.getTimeInMillis();
@@ -201,6 +208,11 @@ public class AddStuffDetailsActivity extends AppCompatActivity {
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString(getString(R.string.preference_stored_stuff_key),stuffsInJson);
                             editor.apply();
+
+                            if(noti_switch.isChecked()){
+                                setAlarmNotification();
+                            }
+
                             Intent backToTulaIntent = new Intent(AddStuffDetailsActivity.this,MainActivity.class);
                             backToTulaIntent.putExtra("navigateToTula","true");
                             backToTulaIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -224,6 +236,15 @@ public class AddStuffDetailsActivity extends AppCompatActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, onDateSetListener, year, month, day);
         datePickerDialog.getDatePicker().setMinDate(c.getTimeInMillis());
         datePickerDialog.show();
+    }
+
+    public void setAlarmNotification(){
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this,AlarmNotificationReceiver.class);
+        intent.putExtra("notiTitle","Nguyên liệu sắp hết hạn");
+        intent.putExtra("notiMessage",et_name.getText().toString() + " của bạn sẽ hết hạn trong ngày!");
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intent,0);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP,expDate.getTimeInMillis(),pendingIntent);
     }
 
     @Override

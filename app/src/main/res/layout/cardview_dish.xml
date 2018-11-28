@@ -17,7 +17,7 @@
             android:id="@+id/dish_thumbnail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/ic_launcher_round"
+            android:background="@drawable/image_placeholder"
             android:scaleType="centerCrop" />
 
         <TextView

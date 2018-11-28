@@ -19,6 +19,7 @@ import com.odiousrainbow.leftovers.Adapters.IngresCategoryListAdapter;
 import com.odiousrainbow.leftovers.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -72,7 +73,12 @@ public class AddStuffActivity extends AppCompatActivity {
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
                             String cateName = documentSnapshot.getString("name"); //List of category Name
-                            List<String> ingres = (List<String>) documentSnapshot.get("prods"); //List of products in said category Name. As data schema above.
+                            List<String> rawIngres = (List<String>) documentSnapshot.get("prods"); //List of products in said category Name. As data schema above.
+                            List<String> ingres = new ArrayList<>();
+                            for(String s : rawIngres){
+                                ingres.add(s.toLowerCase());
+                            }
+                            Collections.sort(ingres);
                             cateList.add(cateName);
                             itemsMap.put(cateName,ingres);
                         }

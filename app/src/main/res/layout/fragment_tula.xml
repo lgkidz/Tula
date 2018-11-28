@@ -102,12 +102,13 @@
             app:rippleColor="@color/colorPrimaryDark" />
 
     </android.support.constraint.ConstraintLayout>
-    <com.odiousrainbow.leftovers.Helpers.MovableFloatingActionButton
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="72dp"
         android:backgroundTint="@color/colorPrimary"
         android:src="@drawable/ic_add_24dp"
         app:rippleColor="@color/colorPrimaryDark" />

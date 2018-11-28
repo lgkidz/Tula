@@ -1,7 +1,10 @@
 package com.odiousrainbow.leftovers.DishDetailsFragments;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -10,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +23,7 @@ import com.google.gson.reflect.TypeToken;
 import com.odiousrainbow.leftovers.R;
 import com.odiousrainbow.leftovers.Adapters.IngredientAdapter;
 import com.odiousrainbow.leftovers.DataModel.Ingredient;
+import com.tooltip.Tooltip;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -40,7 +45,6 @@ public class FragmentIngredient extends Fragment {
     }
 
     private View view;
-    private FloatingActionButton fab;
     private RecyclerView rvListIngredient;
     private IngredientAdapter ingredientAdapter;
     private List<Ingredient> listIngredient;
@@ -54,7 +58,6 @@ public class FragmentIngredient extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_ingredient, container, false);
         alreadyAddedToCart = false;
-        fab = view.findViewById(R.id.fab_add_to_cart);
         Bundle bundle = getArguments();
         listIngredient = (ArrayList) bundle.getSerializable("recipes");
         final SharedPreferences sharedPreferences = getActivity().getSharedPreferences(
@@ -81,27 +84,6 @@ public class FragmentIngredient extends Fragment {
 
         initViews(view);
         addEvents();
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if(!alreadyAddedToCart){
-                    for(Ingredient i: neededIngredients){
-                        cartIngres.add(i);
-                    }
-                    String toJsonCart = gson.toJson(cartIngres);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString(getString(R.string.prefernece_cart_key),toJsonCart);
-                    editor.apply();
-                    Snackbar.make(view,"Đã thêm " + neededIngredients.size() + " nguyên liệu còn thiếu vào giỏ hàng",Snackbar.LENGTH_SHORT).show();
-                    alreadyAddedToCart = true;
-                }
-                else{
-                    Snackbar.make(view,"Bạn đã thêm những nguyên liệu này vào giỏ hàng!",Snackbar.LENGTH_SHORT).show();
-                }
-            }
-        });
         return view;
     }
 
@@ -120,9 +102,18 @@ public class FragmentIngredient extends Fragment {
 
         for(int i =0 ;i<listIngredient.size();i++){
             if(!listIngredient.get(i).isSpice()){
+                Ingredient temp = new Ingredient(listIngredient.get(i));
                 for(int j = 0;j<stuffsInTula.size();j++){
                     if(stuffsInTula.get(j).get("iName").equals(listIngredient.get(i).getName()) && haveMoreThanNeeded(i)){
                         havingMoreThanNeeded = true;
+                        break;
+                    }
+                    else if(stuffsInTula.get(j).get("iName").equals(listIngredient.get(i).getName()) && !haveMoreThanNeeded(i)){
+                        if(temp.getUnit().equals(stuffsInTula.get(j).get("iUnit"))){
+                            int quantityNeeded = Integer.parseInt(listIngredient.get(i).getQuantity()) - Integer.parseInt(stuffsInTula.get(j).get("iQuan"));
+                            temp.setQuantity(String.valueOf(quantityNeeded));
+                        }
+                        havingMoreThanNeeded = false;
                         break;
                     }
                     else{
@@ -130,15 +121,13 @@ public class FragmentIngredient extends Fragment {
                     }
                 }
                 if(!havingMoreThanNeeded){
-                    neededIngredients.add(listIngredient.get(i));
+                    //neededIngredients.add(listIngredient.get(i));
+                    neededIngredients.add(temp);
                 }
             }
         }
 
         Log.d("hasmorethanneeded", neededIngredients.toString());
-        if(havingMoreThanNeeded){
-            fab.setVisibility(View.INVISIBLE);
-        }
     }
 
     public boolean haveMoreThanNeeded(int i){

@@ -3,26 +3,37 @@ package com.odiousrainbow.leftovers.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.odiousrainbow.leftovers.DataModel.Ingredient;
 import com.odiousrainbow.leftovers.R;
 import com.odiousrainbow.leftovers.Adapters.ViewPagerAdapter;
 import com.odiousrainbow.leftovers.DataModel.Recipe;
@@ -31,6 +42,7 @@ import com.squareup.picasso.Picasso;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class DishDetailsActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener {
 
@@ -67,6 +79,18 @@ public class DishDetailsActivity extends AppCompatActivity implements ViewPager.
     private Type type;
     private SharedPreferences.Editor editor;
     private List<Recipe> mFavoriteDishes;
+    private AppBarLayout appBarLayout;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
+    private ConstraintLayout addToCartButtonLayout;
+    private int viewPagePreviousPage = 0;
+    private List<Ingredient> neededIngredients;
+    private List<Ingredient> cartIngres;
+    private List<Ingredient> listIngredient;
+    private List<Map<String,String>> stuffsInTula;
+    private boolean alreadyAddedToCart = false;
+    private Animation slide_down;
+    private Animation slide_up;
+    private TextView neededIngredientsText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +106,11 @@ public class DishDetailsActivity extends AppCompatActivity implements ViewPager.
         if(json != null && !json.equals("[]")){
             mFavoriteDishes = gson.fromJson(json,type);
         }
+        slide_down = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.slide_down);
+
+        slide_up = AnimationUtils.loadAnimation(getApplicationContext(),
+                R.anim.slide_up);
         getData();
         initViews();
         addEvents();
@@ -90,7 +119,25 @@ public class DishDetailsActivity extends AppCompatActivity implements ViewPager.
 
     private void getData() {
         Intent intent = getIntent();
+        String json = sharedPreferences.getString(getString(R.string.preference_stored_stuff_key),null);
+        gson = new Gson();
+        Type type = new TypeToken<ArrayList<Map<String,String>>>(){}.getType();
+        if(json != null){
+            stuffsInTula = gson.fromJson(json,type);
+        }
+        else{
+            stuffsInTula = new ArrayList<>();
+        }
+        String cartJson = sharedPreferences.getString(getString(R.string.prefernece_cart_key),null);
+        if(cartJson!= null){
+            Type cartType = new TypeToken<ArrayList<Ingredient>>(){}.getType();
+            cartIngres = gson.fromJson(cartJson,cartType);
+        }
+        else{
+            cartIngres = new ArrayList<>();
+        }
         currentRecipe = (Recipe) intent.getSerializableExtra("dish");
+        listIngredient = currentRecipe.getIngredients();
     }
 
     private void initViews() {
@@ -103,6 +150,12 @@ public class DishDetailsActivity extends AppCompatActivity implements ViewPager.
         tvCookingTime = findViewById(R.id.tv_recipe_cooking_time);
         tvServing = findViewById(R.id.tv_recipe_serving);
         tvTotalCal = findViewById(R.id.tv_recipe_total_cal);
+        appBarLayout = findViewById(R.id.appbar);
+        collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
+        collapsingToolbarLayout.setTitle(currentRecipe.getName());
+        addToCartButtonLayout = findViewById(R.id.add_to_cart_button_layout);
+        neededIngredientsText = findViewById(R.id.needed_ingredients_text);
+
         if(currentRecipe.getCookingTime() == null){
             tvCookingTime.setText("Chưa cập nhật");
         }
@@ -130,6 +183,7 @@ public class DishDetailsActivity extends AppCompatActivity implements ViewPager.
             @Override
             public void onSuccess(Uri uri) {
                 Picasso.get().load(uri).into(ivDish);
+
             }
         });
 
@@ -162,6 +216,147 @@ public class DishDetailsActivity extends AppCompatActivity implements ViewPager.
             }
         });
 
+        neededIngredients = new ArrayList<>();
+        boolean havingMoreThanNeeded = false;
+        for(int i =0 ;i<listIngredient.size();i++){
+            if(!listIngredient.get(i).isSpice()){
+                Ingredient temp = new Ingredient(listIngredient.get(i));
+                for(int j = 0;j<stuffsInTula.size();j++){
+                    if(stuffsInTula.get(j).get("iName").equals(listIngredient.get(i).getName()) && haveMoreThanNeeded(i)){
+                        havingMoreThanNeeded = true;
+                        break;
+                    }
+                    else if(stuffsInTula.get(j).get("iName").equals(listIngredient.get(i).getName()) && !haveMoreThanNeeded(i)){
+                        if(temp.getUnit().equals(stuffsInTula.get(j).get("iUnit"))){
+                            int quantityNeeded = Integer.parseInt(listIngredient.get(i).getQuantity()) - Integer.parseInt(stuffsInTula.get(j).get("iQuan"));
+                            temp.setQuantity(String.valueOf(quantityNeeded));
+                        }
+                        havingMoreThanNeeded = false;
+                        break;
+                    }
+                    else{
+                        havingMoreThanNeeded = false;
+                    }
+                }
+                if(!havingMoreThanNeeded){
+                    //neededIngredients.add(listIngredient.get(i));
+                    neededIngredients.add(temp);
+                }
+            }
+        }
+
+        Log.d("hasmorethanneeded", neededIngredients.toString());
+        if(havingMoreThanNeeded){
+            addToCartButtonLayout.setVisibility(View.INVISIBLE);
+        }
+        neededIngredientsText.setText(neededIngredients.size() + " nguyên liệu");
+
+        addToCartButtonLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(!alreadyAddedToCart){
+                    for(Ingredient i: neededIngredients){
+                        cartIngres.add(i);
+                    }
+                    String toJsonCart = gson.toJson(cartIngres);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString(getString(R.string.prefernece_cart_key),toJsonCart);
+                    editor.apply();
+                    Snackbar.make((View)appBarLayout.getParent(),"Đã thêm " + neededIngredients.size() + " nguyên liệu còn thiếu vào giỏ hàng",Snackbar.LENGTH_SHORT).show();
+                    addToCartButtonLayout.startAnimation(slide_down);
+                    addToCartButtonLayout.setVisibility(View.INVISIBLE);
+                    alreadyAddedToCart = true;
+                }
+                else{
+                    Snackbar.make((View)appBarLayout.getParent(),"Bạn đã thêm những nguyên liệu này vào giỏ hàng!",Snackbar.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+    }
+
+    public boolean haveMoreThanNeeded(int i){
+        float quantityHave = 0;
+        float quantityNeed;
+        String unitNeed = listIngredient.get(i).getUnit().toLowerCase();
+        String unitHave = "gram";
+        switch (unitNeed){
+            case "gram":{
+                quantityNeed = Float.parseFloat(listIngredient.get(i).getQuantity());
+                break;
+            }
+            case "kg":{
+                quantityNeed = 1000 * Float.parseFloat(listIngredient.get(i).getQuantity());
+                unitNeed = "gram";
+                break;
+            }
+            case "lạng":{
+                quantityNeed = 100 * Float.parseFloat(listIngredient.get(i).getQuantity());
+                unitNeed = "gram";
+                break;
+            }
+            case "ml":{
+                quantityNeed = Float.parseFloat(listIngredient.get(i).getQuantity());
+                unitNeed = "gram";
+                break;
+            }
+            case "l":{
+                quantityNeed = 1000 * Float.parseFloat(listIngredient.get(i).getQuantity());
+                unitNeed = "gram";
+                break;
+            }
+            default:{
+                quantityNeed = Float.parseFloat(listIngredient.get(i).getQuantity());
+                unitNeed = "countable_unit";
+                break;
+            }
+        }
+
+        for(int j = 0;j<stuffsInTula.size();j++){
+            if(stuffsInTula.get(j).get("iName").equals(listIngredient.get(i).getName())){
+                String u = stuffsInTula.get(j).get("iUnit").toLowerCase();
+                switch (u){
+                    case "gram":{
+                        quantityHave += Float.parseFloat(stuffsInTula.get(j).get("iQuan"));
+                        unitHave = "gram";
+                        break;
+                    }
+                    case "kg":{
+                        quantityHave += 1000 * Float.parseFloat(stuffsInTula.get(j).get("iQuan"));
+                        unitHave = "gram";
+                        break;
+                    }
+                    case "lạng":{
+                        quantityHave += 100 * Float.parseFloat(stuffsInTula.get(j).get("iQuan"));
+                        unitHave = "gram";
+                        break;
+                    }
+                    case "ml":{
+                        quantityHave += Float.parseFloat(stuffsInTula.get(j).get("iQuan"));
+                        unitHave = "gram";
+                        break;
+                    }
+                    case "l":{
+                        quantityHave += 1000 * Float.parseFloat(stuffsInTula.get(j).get("iQuan"));
+                        unitHave = "gram";
+                        break;
+                    }
+                    default:{
+                        quantityHave += Float.parseFloat(stuffsInTula.get(j).get("iQuan"));
+                        unitHave = "countable_unit";
+                        break;
+                    }
+                }
+            }
+        }
+
+
+
+        if(unitHave.equals(unitNeed) && quantityHave >= quantityNeed){
+            return true;
+        }
+        return false;
     }
 
     private void initViewPager() {
@@ -177,6 +372,7 @@ public class DishDetailsActivity extends AppCompatActivity implements ViewPager.
         getMenuInflater().inflate(R.menu.dish_details_menu, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -195,6 +391,7 @@ public class DishDetailsActivity extends AppCompatActivity implements ViewPager.
         return super.onOptionsItemSelected(item);
     }
 
+
     @Override
     public void onPageScrolled(int i, float v, int i1) {
 
@@ -202,7 +399,28 @@ public class DishDetailsActivity extends AppCompatActivity implements ViewPager.
 
     @Override
     public void onPageSelected(int i) {
+        if(!alreadyAddedToCart && neededIngredients.size() > 0){
+            if(i == 1 && viewPagePreviousPage == 0){
+                addToCartButtonLayout.startAnimation(slide_down);
+                addToCartButtonLayout.setVisibility(View.INVISIBLE);
 
+            }
+            else if(i == 1 && viewPagePreviousPage == 2){
+                addToCartButtonLayout.setVisibility(View.INVISIBLE);
+            }
+            else if(i == 2){
+                addToCartButtonLayout.setVisibility(View.INVISIBLE);
+            }
+            else{
+                addToCartButtonLayout.setVisibility(View.VISIBLE);
+                addToCartButtonLayout.startAnimation(slide_up);
+            }
+        }
+        else{
+            addToCartButtonLayout.setVisibility(View.INVISIBLE);
+        }
+
+        viewPagePreviousPage = i;
     }
 
     @Override

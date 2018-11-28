@@ -1,5 +1,6 @@
 package com.odiousrainbow.leftovers.Activities;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,5 +19,12 @@ public class UpgradeToProActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.upgrade_to_pro_activity_title);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent backToMainScreen = new Intent(this,MainActivity.class);
+        backToMainScreen.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(backToMainScreen);
     }
 }

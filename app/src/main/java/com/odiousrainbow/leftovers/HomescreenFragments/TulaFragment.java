@@ -85,7 +85,12 @@ public class TulaFragment extends Fragment implements TulaListRecyclerItemTouchH
         String json = sharedPreferences.getString(getString(R.string.preference_stored_stuff_key),null);
         gson = new Gson();
         Type type = new TypeToken<ArrayList<Map<String,String>>>(){}.getType();
-        stuffsInTula = gson.fromJson(json,type);
+        if(json != null){
+            stuffsInTula = gson.fromJson(json,type);
+        }
+        else{
+            stuffsInTula = new ArrayList<>();
+        }
         if(json == null || json.equals("[]")){
             empty_tula_layout.setVisibility(View.VISIBLE);
             fab.setVisibility(View.INVISIBLE);

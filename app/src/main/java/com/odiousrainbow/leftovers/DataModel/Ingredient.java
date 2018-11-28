@@ -37,6 +37,13 @@ public class Ingredient implements Serializable, Parcelable {
         this.spice = spice;
     }
 
+    public Ingredient(Ingredient i){
+        this.name = i.name;
+        this.quantity = i.quantity;
+        this.unit = i.unit;
+        this.spice = i.spice;
+    }
+
     public String getName() {
         return name;
     }
@@ -66,4 +73,6 @@ public class Ingredient implements Serializable, Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
 
     }
+
+
 }

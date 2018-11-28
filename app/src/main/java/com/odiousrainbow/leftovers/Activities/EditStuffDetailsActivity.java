@@ -1,6 +1,9 @@
 package com.odiousrainbow.leftovers.Activities;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,6 +28,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.odiousrainbow.leftovers.Helpers.AlarmNotificationReceiver;
 import com.odiousrainbow.leftovers.R;
 
 import java.lang.reflect.Type;
@@ -55,6 +59,7 @@ public class EditStuffDetailsActivity extends AppCompatActivity {
     private String ingreUnit;
     private String ingreExpDate;
     private String ingreNoti;
+    private Calendar expDate;
 
     private List<Map<String,String>> stuffs;
     @Override
@@ -93,6 +98,7 @@ public class EditStuffDetailsActivity extends AppCompatActivity {
         final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, 7);
+        expDate = calendar;
         Date expDateRaw = calendar.getTime();
         String expDateString = dateFormat.format(expDateRaw);
         et_exp_date.setText(expDateString);
@@ -185,7 +191,7 @@ public class EditStuffDetailsActivity extends AppCompatActivity {
         et_exp_date.setText(ingreExpDate);
 
         Calendar curDate = Calendar.getInstance();
-        Calendar expDate = Calendar.getInstance();
+        expDate = Calendar.getInstance();
         try {
             expDate.setTime(dateFormat.parse(ingreExpDate));
         } catch (ParseException e) {
@@ -243,6 +249,10 @@ public class EditStuffDetailsActivity extends AppCompatActivity {
                             m.put("iNoti",iNoti);
                             stuffs.add(m);
 
+                            if(noti_switch.isChecked()){
+                                setAlarmNotification();
+                            }
+
                             String stuffsInJson = gson.toJson(stuffs);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString(getString(R.string.preference_stored_stuff_key),stuffsInJson);
@@ -269,6 +279,15 @@ public class EditStuffDetailsActivity extends AppCompatActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, onDateSetListener, year, month, day);
         datePickerDialog.getDatePicker().setMinDate(c.getTimeInMillis());
         datePickerDialog.show();
+    }
+
+    public void setAlarmNotification(){
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this,AlarmNotificationReceiver.class);
+        intent.putExtra("notiTitle","Nguyên liệu sắp hết hạn");
+        intent.putExtra("notiMessage",et_name.getText().toString() + " của bạn sẽ hết hạn trong ngày!");
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intent,0);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP,expDate.getTimeInMillis(),pendingIntent);
     }
 
     @Override

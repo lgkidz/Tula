@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/list_ingredient"
+    <RelativeLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_add_to_cart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:rippleColor="@color/colorPrimaryDark"
-        android:src="@drawable/ic_shopping_cart_white"
-        android:layout_gravity="end|bottom"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="48dp"
-        android:backgroundTint="@color/colorPrimary" />
-</FrameLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list_ingredient"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="40dp">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>
