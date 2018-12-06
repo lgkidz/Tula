@@ -31,7 +31,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
@@ -48,6 +50,8 @@ import com.odiousrainbow.leftovers.R;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -81,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
     private final String KEY_INGREDIENTS_QUANTITY = "quantity";
     private final String KEY_INGREDIENTS_UNIT = "unit";
     private final String KEY_INGREDIENTS_SPICE = "spice";
+
+    CoordinatorLayout.LayoutParams layoutParams;
 
 
     @Override
@@ -148,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mBottomNavigationBar = findViewById(R.id.bottom_nav_bar);
-        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) mBottomNavigationBar.getLayoutParams();
+        layoutParams = (CoordinatorLayout.LayoutParams) mBottomNavigationBar.getLayoutParams();
         layoutParams.setBehavior(new BottomNavigationViewBehavior());
         mDrawerLayout = findViewById(R.id.drawer_layout);
         mDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, mDrawerLayout, R.string.drawer_open,R.string.drawer_close);
@@ -182,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.drawer_menu_home:
                         mBottomNavigationBar.setSelectedItemId(R.id.bottom_nav_home);
                         mDrawerLayout.closeDrawer(Gravity.START,true);
+
                         return true;
                     case R.id.drawer_menu_tula:
                         mBottomNavigationBar.setSelectedItemId(R.id.bottom_nav_tula);
@@ -219,6 +226,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.bottom_nav_home:
                         homeFragment = new HomeFragment();
                         setFragment(homeFragment);
+
                         //myToolbar.setLogo(R.drawable.inapplogo);
                         //getSupportActionBar().setLogo(R.drawable.inapplogo);
                         getSupportActionBar().setTitle(getString(R.string.app_name));
@@ -344,6 +352,36 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+        db.collection(KEY_COLLECTION).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                Recipedata.clear();
+                searchData.clear();
+                List<Map<String,Object>> m;
+                for(QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots){
+                    List<Ingredient> ingredients = new ArrayList<>();
+                    m =  (List<Map<String,Object>>) documentSnapshot.get(KEY_INGREDIENTS);
+                    for (Map<String,Object> i : m){
+                        String name = (String) i.get(KEY_INGREDIENTS_NAME);
+                        String quantity = (String) i.get(KEY_INGREDIENTS_QUANTITY);
+                        String unit = (String) i.get(KEY_INGREDIENTS_UNIT);
+                        Boolean isSpice = (Boolean) i.get(KEY_INGREDIENTS_SPICE);
+                        Ingredient ingredient = new Ingredient(name,quantity,unit,isSpice);
+                        ingredients.add(ingredient);
+                    }
+                    Recipe recipe = new Recipe(documentSnapshot.getString(KEY_DISH_IMAGE_URL)
+                            ,documentSnapshot.getString(KEY_DISH_NAME)
+                            ,documentSnapshot.getString(KEY_DISH_INSTRUCTION)
+                            ,documentSnapshot.getString(KEY_DISH_SERVING)
+                            ,documentSnapshot.getString(KEY_DISH_COOKING_TIME)
+                            ,documentSnapshot.getString(KEY_DISH_TOTAL_CAL)
+                            ,ingredients);
+                    Recipedata.add(recipe);
+                    searchData.add(recipe.getName());
+                }
+            }
+        });
     }
 
 }

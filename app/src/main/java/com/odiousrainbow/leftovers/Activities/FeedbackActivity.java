@@ -9,10 +9,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.odiousrainbow.leftovers.R;
@@ -21,10 +25,14 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FeedbackActivity extends AppCompatActivity {
     TextInputEditText et_email;
     TextInputEditText et_message;
+    private FirebaseFirestore db;
+    public static final String COLLECTION_NAME = "feedbacks";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +44,13 @@ public class FeedbackActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         et_email = findViewById(R.id.et_email);
         et_message = findViewById(R.id.et_message);
+        db = FirebaseFirestore.getInstance();
     }
 
     public void checkAndSendFeedBack() {
-        if(et_email.getText().toString().trim().equals("") || et_message.getText().toString().trim().equals("")) {
+        Pattern pattern = Pattern.compile("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}");
+        Matcher mat = pattern.matcher(et_email.getText().toString());
+        if(!mat.matches() || et_message.getText().toString().trim().equals("")) {
             Toast.makeText(this,"Bạn cần nhập email và nội dung đánh giá.",Toast.LENGTH_LONG).show();
         }
         else{
@@ -48,6 +59,10 @@ public class FeedbackActivity extends AppCompatActivity {
                     .setPositiveButton("Oke", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            Map<String, Object> data = new HashMap<>();
+                            data.put("email",et_email.getText().toString());
+                            data.put("content",et_message.getText().toString());
+                            db.collection(COLLECTION_NAME).add(data);
                             Intent backToTulaIntent = new Intent(FeedbackActivity.this,MainActivity.class);
                             backToTulaIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(backToTulaIntent);

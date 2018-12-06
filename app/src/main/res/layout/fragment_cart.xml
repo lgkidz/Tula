@@ -37,7 +37,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:gravity="center"
-            android:text="Shopping list của bạn đang trống"
+            android:text="Giỏ hàng của bạn đang trống"
             android:textColor="#000000"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"

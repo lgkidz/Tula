@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,15 +52,23 @@ public class CartSimpleListAdapter extends RecyclerView.Adapter<CartSimpleListAd
         simpleCartItemHolder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                toogleCheckBox(i);
-                simpleCartItemHolder.checkBox.setChecked(!simpleCartItemHolder.checkBox.isChecked());
+                toggleSelection(i);
             }
         });
-        simpleCartItemHolder.checkBox.setChecked(itemCheckedList.get(i));
-        simpleCartItemHolder.itemView
-                .setBackgroundColor(mSelectedItemsIds.get(i) ? Color.parseColor(mContext.getString(R.color.colorAccent)) : Color.TRANSPARENT);
-        simpleCartItemHolder.name.setTextColor(mSelectedItemsIds.get(i) ? Color.WHITE : Color.BLACK);
-        simpleCartItemHolder.quantity.setTextColor(mSelectedItemsIds.get(i) ? Color.WHITE : Color.GRAY);
+
+        simpleCartItemHolder.checkBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleSelection(i);
+            }
+        });
+
+        simpleCartItemHolder.checkBox.setChecked(mSelectedItemsIds.get(i,false));
+        Log.d("loggo", itemCheckedList.toString());
+        //simpleCartItemHolder.itemView
+        //        .setBackgroundColor(mSelectedItemsIds.get(i) ? Color.parseColor(mContext.getString(R.color.colorAccent)) : Color.TRANSPARENT);
+        //simpleCartItemHolder.name.setTextColor(mSelectedItemsIds.get(i) ? Color.WHITE : Color.BLACK);
+        //simpleCartItemHolder.quantity.setTextColor(mSelectedItemsIds.get(i) ? Color.WHITE : Color.GRAY);
     }
 
     public void checkView(int position, boolean value){
@@ -91,6 +100,7 @@ public class CartSimpleListAdapter extends RecyclerView.Adapter<CartSimpleListAd
     }
 
     public void toggleSelection(int position) {
+        toogleCheckBox(position);
         selectView(position, !mSelectedItemsIds.get(position));
     }
 

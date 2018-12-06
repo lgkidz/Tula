@@ -51,5 +51,53 @@
         <item>gram</item>
         <item>kg</item>
     </string-array>
-    <string name="title_activity_settings">Settings</string>
+
+    <string-array name="search_keyword">
+        <item>cá</item>
+        <item>tôm</item>
+        <item>cua</item>
+        <item>ghẹ</item>
+        <item>mực</item>
+        <item>ốc</item>
+        <item>hàu</item>
+        <item>bò</item>
+        <item>heo</item>
+        <item>gà</item>
+        <item>vịt</item>
+        <item>dê</item>
+        <item>ếch</item>
+        <item>chim</item>
+        <item>thỏ</item>
+        <item>cừu</item>
+        <item>lợn</item>
+        <item>rau</item>
+        <item>ngan</item>
+        <item>ngỗng</item>
+        <item>trâu</item>
+        <item>củ</item>
+        <item>quả</item>
+        <item>bột</item>
+        <item>bơ</item>
+        <item>kem</item>
+        <item>chocolate</item>
+        <item>trà</item>
+        <item>chè</item>
+        <item>thạch</item>
+        <item>bún</item>
+        <item>mì</item>
+        <item>mỳ</item>
+        <item>nui</item>
+        <item>chay</item>
+        <item>nấm</item>
+        <item>trứng</item>
+        <item>đậu</item>
+        <item>đỗ</item>
+        <item>chả</item>
+        <item>giò</item>
+        <item>đường</item>
+        <item>mật</item>
+        <item>mứt</item>
+        <item>hạt</item>
+        <item>sữa</item>
+    </string-array>
 </resources>

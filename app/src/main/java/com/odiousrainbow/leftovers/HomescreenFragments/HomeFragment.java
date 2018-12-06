@@ -4,6 +4,7 @@ package com.odiousrainbow.leftovers.HomescreenFragments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -32,8 +33,13 @@ import com.odiousrainbow.leftovers.R;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 /**
@@ -139,7 +145,8 @@ public class HomeFragment extends Fragment {
                                     ,ingredients);
                             data.add(recipe);
                         }
-                        filterWithStuffInTula();
+                        //filterWithStuffInTula();
+                        suggestDishes2();
                     }
                 });
 
@@ -177,10 +184,104 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    public void suggestDishes2(){
+        if(isAdded()){
+            SharedPreferences sharedPreferences = context.getSharedPreferences(getString(R.string.preference_file_key),Context.MODE_PRIVATE);
+            String json = sharedPreferences.getString(getString(R.string.preference_stored_stuff_key),null);
+            Gson gson = new Gson();
+            Type type = new TypeToken<ArrayList<Map<String,String>>>(){}.getType();
+            List<Map<String,String>> stuffsInTula = gson.fromJson(json,type);
+            List<String> searchKeywordsList = Arrays.asList(getResources().getStringArray(R.array.search_keyword));
+            Map<String,Integer> scoreBoard = new HashMap<>();
+
+            if(stuffsInTula.size() > 0){
+                empty_tula_layout.setVisibility(View.INVISIBLE);
+                List<String> keywords = new ArrayList<>();
+                // Initialize a list of keywords
+                for(int i = 0;i<stuffsInTula.size();i++){
+                    String name = stuffsInTula.get(i).get("iName").trim().toLowerCase();
+                    String cate = stuffsInTula.get(i).get("iCate").trim().toLowerCase();
+                    for(int j = 0;j<searchKeywordsList.size();j++){
+                        if(name.contains(searchKeywordsList.get(j).trim().toLowerCase()) || cate.contains(searchKeywordsList.get(j).trim().toLowerCase())){
+                            if(!keywords.contains(searchKeywordsList.get(j))){
+                                keywords.add(searchKeywordsList.get(j));
+                                break;
+                            }
+                        }
+                    }
+                }
+                // END Initialize a list of keywords
+                Log.d("scoreBoard", keywords.toString());
+                for(int i = 0;i<data.size();i++){
+
+                    int score = 0;
+                    List<Ingredient> currentIngredientList = data.get(i).getIngredients();
+                    String name = data.get(i).getName();
+                    Log.d("scoreBoard", "*****" + name + "*****");
+                    for(String s : keywords){
+                        if (name.trim().toLowerCase().contains(s)){
+                            score ++;
+                        }
+                    }
+                    int ingScore = 0;
+                    Log.d("scoreBoard", "number of ingres: " + currentIngredientList.size());
+                    for(Ingredient ing : currentIngredientList){
+                        if(ing.isSpice()){
+                            continue;
+                        }else{
+                            for(Map<String,String> m : stuffsInTula){
+                                if(ing.getName().trim().toLowerCase().contains(m.get("iName").trim().toLowerCase())){
+                                    Log.d("scoreBoard","ing: " + ing.getName() + " match: " + m.get("iName") + " : +5");
+                                    ingScore += 5;
+                                    if(ing.getUnit().trim().toLowerCase().equals(m.get("iUnit").trim().toLowerCase())){
+                                        float need = Float.parseFloat(ing.getQuantity());
+                                        float have = Float.parseFloat(m.get("iQuan"));
+                                        if(need <= have){
+                                            Log.d("scoreBoard", "ing: " + ing.getName() + " more than needed: +1");
+                                            ingScore ++;
+                                        }
+                                    }
+                                }
+                            }
+                            for(String k : keywords){
+                                if(ing.getName().trim().toLowerCase().contains(k)){
+                                    Log.d("scoreBoard", "ing: " + ing.getName() + " match keyword: " + k + " : +1");
+                                    ingScore ++;
+                                }
+                            }
+                        }
+                    }
+
+                    score += ingScore;
+                    Log.d("scoreBoard", "total score: " + score);
+                    Log.d("scoreBoard", "*******************************");
+                    if(score>0){
+                        scoreBoard.put(name,score);
+                        suggestedDishes.add(data.get(i));
+                    }
+                }
+                Log.d("scoreBoard", scoreBoard.toString());
+                Collections.sort(suggestedDishes, (o1, o2) -> {
+                    int score1 = scoreBoard.get(o1.getName());
+                    int score2 = scoreBoard.get(o2.getName());
+                    return score2 - score1;
+                });
+                fillView();
+            }
+        }
+    }
+
+
     public void fillView(){
-        DishesGridAdapter mAdapter = new DishesGridAdapter(getActivity(),suggestedDishes);
-        homeRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
-        homeRecyclerView.setAdapter(mAdapter);
-        mProgressBar.setVisibility(View.INVISIBLE);
+        if(suggestedDishes.size() > 0){
+            DishesGridAdapter mAdapter = new DishesGridAdapter(getActivity(),suggestedDishes);
+            homeRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
+            homeRecyclerView.setAdapter(mAdapter);
+            mProgressBar.setVisibility(View.INVISIBLE);
+        }
+        else{
+            empty_tula_layout.setVisibility(View.VISIBLE);
+        }
+
     }
 }

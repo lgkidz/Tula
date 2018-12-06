@@ -132,7 +132,7 @@ public class CartFragment extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 //If ActionMode not null select item
-                if (mActionMode != null)
+                //if (mActionMode != null)
                     onListItemSelect(position);
             }
 
@@ -159,7 +159,7 @@ public class CartFragment extends Fragment {
 
         if (mActionMode != null){}
             //set action mode title on item selection
-            //mActionMode.setTitle(String.valueOf("Đã chọn " + cartSimpleListAdapter.getSelectedCount()));
+            //mActionMode.setTitle(String.valueOf("Đã chọn " + cartSimpleListAdapter.getSelectedCount())); //gonna generate bug!
 
 
     }
@@ -193,6 +193,9 @@ public class CartFragment extends Fragment {
                         editor.putString(getString(R.string.prefernece_cart_key),json);
                         editor.apply();
                         mActionMode.finish();//Finish action mode after use
+                        if(itemsWithSumQuantity.size() == 0){
+                            empty_cart.setVisibility(View.VISIBLE);
+                        }
                     }
                 })
                 .setNegativeButton("Quay lại",null)
@@ -238,6 +241,9 @@ public class CartFragment extends Fragment {
                         editor.putString(getString(R.string.preference_stored_stuff_key),stuffsInJson);
                         editor.apply();
                         mActionMode.finish();//Finish action mode after use
+                        if(itemsWithSumQuantity.size() == 0){
+                            empty_cart.setVisibility(View.VISIBLE);
+                        }
                     }
                 })
                 .setNegativeButton("Quay lại",null)

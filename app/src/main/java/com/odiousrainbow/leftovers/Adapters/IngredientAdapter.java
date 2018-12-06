@@ -2,6 +2,7 @@ package com.odiousrainbow.leftovers.Adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -59,6 +60,8 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
         Ingredient ingredient = listIngredient.get(i);
         ingredientHolder.bindData(ingredient);
         if(!listIngredient.get(i).isSpice()){
+            ingredientHolder.tvIngredient.setTextColor(Color.BLACK);
+            ingredientHolder.tvQuantity.setTextColor(Color.BLACK);
             for(int j = 0;j<stuffsInTula.size();j++){
                 if(stuffsInTula.get(j).get("iName").equals(listIngredient.get(i).getName()) && haveMoreThanNeeded(i)){
                     ingredientHolder.ivCheck.setVisibility(View.VISIBLE);
@@ -69,7 +72,9 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
             }
         }
         else{
-            ingredientHolder.ivCheck.setVisibility(View.VISIBLE);
+            ingredientHolder.tvIngredient.setTextColor(Color.GRAY);
+            ingredientHolder.tvQuantity.setTextColor(Color.GRAY);
+            //ingredientHolder.ivCheck.setVisibility(View.VISIBLE);
         }
     }
 

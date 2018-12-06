@@ -13,29 +13,11 @@
         android:background="@color/white"
         android:visibility="visible">
 
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="127dp"
-            android:layout_height="142dp"
-            android:layout_marginTop="100dp"
-            android:src="@drawable/ic_store_mall_directory_black_24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <CalendarView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:gravity="center"
-            android:text="Tính năng này hiện đang trong quá trình phát triển :("
-            android:textSize="24sp"
-            android:textColor="#000000"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+        </CalendarView>
 
     </android.support.constraint.ConstraintLayout>
 </FrameLayout>
