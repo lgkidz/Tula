@@ -2,6 +2,7 @@ package com.odiousrainbow.leftovers.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +18,10 @@ import android.widget.TextView;
 import com.odiousrainbow.leftovers.Activities.EditStuffDetailsActivity;
 import com.odiousrainbow.leftovers.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,8 +99,24 @@ public class TulaListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             final String iUnit = mData.get(i).get("iUnit");
             final String iExpDate = mData.get(i).get("iExpDate");
             final String iNoti = mData.get(i).get("iNoti");
-            Log.d("thedamnlist", iName);
-            ((TulaStuffItemViewHolder) viewHolder).setData(iName,iQuan,iUnit,iExpDate,iNoti);
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            Calendar curDate = Calendar.getInstance();
+            Calendar expDate = Calendar.getInstance();
+            try {
+                expDate.setTime(dateFormat.parse(mData.get(i).get("iExpDate")));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            long diff = expDate.getTimeInMillis() - curDate.getTimeInMillis();
+            float dayCount = (float) diff / (24 * 60 * 60 * 1000);
+            if((int) dayCount < 0){
+                String iName2 = iName +  " (Thực phẩm đã quá hạn)";
+                ((TulaStuffItemViewHolder) viewHolder).setData(iName2,iQuan,iUnit,iExpDate,iNoti);
+                ((TulaStuffItemViewHolder) viewHolder).itemName.setTextColor(Color.RED);
+            }
+            else{
+                ((TulaStuffItemViewHolder) viewHolder).setData(iName,iQuan,iUnit,iExpDate,iNoti);
+            }
             ((TulaStuffItemViewHolder) viewHolder).itemInfoButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

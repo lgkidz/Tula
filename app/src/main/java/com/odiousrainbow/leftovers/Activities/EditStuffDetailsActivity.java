@@ -68,6 +68,7 @@ public class EditStuffDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_stuff_details);
         et_name = findViewById(R.id.et_name);
         et_cate = findViewById(R.id.et_cate);
+
         unit_spinner = findViewById(R.id.unit_spinner);
         et_quan = findViewById(R.id.et_quan);
         et_exp_date = findViewById(R.id.et_expire_date);
@@ -183,6 +184,7 @@ public class EditStuffDetailsActivity extends AppCompatActivity {
         unit_spinner.setAdapter(adapter);
 
         et_name.setText(ingreName);
+
         et_cate.setText(ingreCate);
         et_quan.setText(ingreQuan);
         int spinnerPosition = adapter.getPosition(ingreUnit);

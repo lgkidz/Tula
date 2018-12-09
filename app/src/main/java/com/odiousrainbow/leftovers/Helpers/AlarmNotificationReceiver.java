@@ -12,7 +12,8 @@ public class AlarmNotificationReceiver extends BroadcastReceiver {
         String message = intent.getStringExtra("notiMessage");
         NotificationHelper notificationHelper = new NotificationHelper(context);
         NotificationCompat.Builder builder = notificationHelper.getChannel1Notification(title,message);
-        notificationHelper.getManager().notify(1,builder.build());
+        int uniqueInt = (int) (System.currentTimeMillis() & 0xfffffff);
+        notificationHelper.getManager().notify(uniqueInt,builder.build());
     }
 
 }

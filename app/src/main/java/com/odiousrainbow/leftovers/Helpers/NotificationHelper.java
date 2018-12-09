@@ -51,9 +51,6 @@ public class NotificationHelper extends ContextWrapper {
         getManager().createNotificationChannel(channel2);
     }
 
-    public void createNotificationApiBelow26(){
-
-    }
 
 
     public NotificationManager getManager(){

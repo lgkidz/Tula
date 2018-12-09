@@ -243,8 +243,18 @@ public class AddStuffDetailsActivity extends AppCompatActivity {
         Intent intent = new Intent(this,AlarmNotificationReceiver.class);
         intent.putExtra("notiTitle","Nguyên liệu sắp hết hạn");
         intent.putExtra("notiMessage",et_name.getText().toString() + " của bạn sẽ hết hạn trong ngày!");
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,1,intent,0);
+        int uniqueInt = (int) (System.currentTimeMillis() & 0xfffffff);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,uniqueInt,intent,0);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP,expDate.getTimeInMillis(),pendingIntent);
+
+        Intent outOfDateNotiIntent = new Intent(this,AlarmNotificationReceiver.class);
+        outOfDateNotiIntent.putExtra("notiTitle","Nguyễn liệu quá hạn");
+        outOfDateNotiIntent.putExtra("notiMessage",et_name.getText().toString() + " đã quá hạn sử dụng!");
+        int uniqueInt2 = (int) (System.currentTimeMillis() & 0xfffffff);
+        PendingIntent pendingIntent2 = PendingIntent.getBroadcast(this,uniqueInt2,outOfDateNotiIntent,0);
+        Calendar outOfDate = expDate;
+        outOfDate.add(Calendar.DAY_OF_YEAR,1);
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP,outOfDate.getTimeInMillis(),pendingIntent2);
     }
 
     @Override

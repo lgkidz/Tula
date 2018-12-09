@@ -36,6 +36,7 @@ import com.odiousrainbow.leftovers.R;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -215,14 +216,15 @@ public class CartFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         SparseBooleanArray selected = cartSimpleListAdapter
                                 .getSelectedIds();//Get selected ids
-
                         //Loop all selected ids
+                        List<String> categoryList = Arrays.asList(getResources().getStringArray(R.array.temporary_ingredients_categories));
                         for (int i = (selected.size() - 1); i >= 0; i--) {
                             if (selected.valueAt(i)) {
                                 Ingredient currentIngredient = data.get(selected.keyAt(i));
                                 Map<String,String> m = new HashMap<>();
                                 m.put("iName",currentIngredient.getName());
-                                m.put("iCate","Khác");
+                                String possibleCategory = possibleCategory(currentIngredient.getName());
+                                m.put("iCate",possibleCategory);
                                 m.put("iQuan",currentIngredient.getQuantity());
                                 m.put("iUnit",currentIngredient.getUnit());
                                 m.put("iExpDate",expDateString);
@@ -248,6 +250,74 @@ public class CartFragment extends Fragment {
                 })
                 .setNegativeButton("Quay lại",null)
                 .show();
+    }
+
+    public String possibleCategory(String name){
+                        /*
+                        <string-array name="temporary_ingredients_categories">
+                            <item>Bơ sữa</item>
+                            <item>Bộ mì và gạo</item>
+                            <item>Cá</item>
+                            <item>Hoa quả</item>
+                            <item>Hạt có vỏ</item>
+                            <item>Rau củ</item>
+                            <item>Thịt</item>
+                            <item>Thủy hải sản</item>
+                            <item>Trứng</item>
+                            <item>Đậu và đỗ</item>
+                            <item>Đồ uống</item>
+                        </string-array>
+                         */
+        String nameLowerCase = name.trim().toLowerCase();
+        if(nameLowerCase.contains("kem") || name.contains("phô mai") || nameLowerCase.contains("sữa") || nameLowerCase.equals("bơ")){
+            return "Bơ sữa";
+        }
+        else if(nameLowerCase.contains("bánh") || nameLowerCase.contains("bún") || nameLowerCase.contains("phở") ||
+        nameLowerCase.contains("miến")|| nameLowerCase.contains("mỳ")|| nameLowerCase.contains("mì")|| nameLowerCase.contains("nui")|| nameLowerCase.contains("cảo")){
+            return "Bột mì và gạo";
+        }
+        else if(nameLowerCase.contains("cá ")){
+            return "Cá";
+        }
+        else if(nameLowerCase.contains("hạt") || nameLowerCase.contains("hạnh")|| nameLowerCase.contains("hồ") || nameLowerCase.contains("lạc")|| nameLowerCase.contains("yến mạch")){
+            return "Hạt có vỏ";
+        }
+        else if(nameLowerCase.contains("gà") || nameLowerCase.contains("bò")|| nameLowerCase.contains("lợn")
+                || nameLowerCase.contains("heo")|| nameLowerCase.contains("giò")|| nameLowerCase.contains("chả")|| nameLowerCase.contains("thịt")
+                || nameLowerCase.contains("vịt")|| nameLowerCase.contains("ngan")|| nameLowerCase.contains("xương")
+                || nameLowerCase.contains("sườn")|| nameLowerCase.contains("xúc xích")|| nameLowerCase.contains("lạp")
+                || nameLowerCase.contains("pate")){
+            return "Thịt";
+        }
+        else if(nameLowerCase.contains("cua")|| nameLowerCase.contains("ghẹ")|| nameLowerCase.contains("sò")
+                || nameLowerCase.contains("ngao")|| nameLowerCase.contains("tôm")|| nameLowerCase.contains("tép")
+                || nameLowerCase.contains("mực")|| nameLowerCase.contains("tuộc")|| nameLowerCase.contains("ếch")
+                || nameLowerCase.contains("ốc")){
+            return "Thủy hải sản";
+        }
+        else if(nameLowerCase.contains("trứng")){
+            return "Trứng";
+        }
+        else if(nameLowerCase.contains("đỗ")|| nameLowerCase.contains("đậu")){
+            return "Đậu và đỗ";
+        }
+        else if(nameLowerCase.contains("rau")|| nameLowerCase.contains("củ") || nameLowerCase.contains("bầu")
+                || nameLowerCase.contains("cà") || nameLowerCase.contains("chua")|| nameLowerCase.contains("hành")
+                || nameLowerCase.contains("bí")|| nameLowerCase.contains("bầu")|| nameLowerCase.contains("mướp")
+                || nameLowerCase.contains("húng")|| nameLowerCase.contains("nấm")|| nameLowerCase.contains("khoai")
+                || nameLowerCase.contains("su")|| nameLowerCase.contains("súp")|| nameLowerCase.contains("tía")){
+            return "Rau củ";
+        }
+        else if(nameLowerCase.contains("bơ")|| nameLowerCase.contains("bưởi")|| nameLowerCase.contains("cam")|| nameLowerCase.contains("chanh")
+                || nameLowerCase.contains("cherry")|| nameLowerCase.contains("chuối")|| nameLowerCase.contains("dâu")|| nameLowerCase.contains("dưa")
+                || nameLowerCase.contains("dứa")|| nameLowerCase.contains("dừa")|| nameLowerCase.contains("hồng")|| nameLowerCase.contains("kiwi")
+                || nameLowerCase.contains("măng cụt")|| nameLowerCase.contains("nho")|| nameLowerCase.contains("quýt")|| nameLowerCase.contains("quất")
+                || nameLowerCase.contains("sung")|| nameLowerCase.contains("táo")|| nameLowerCase.contains("xoài")|| nameLowerCase.contains("đào")
+                || nameLowerCase.contains("ổi")|| nameLowerCase.contains("lựu")|| nameLowerCase.contains("quả")|| nameLowerCase.contains("trái")){
+            return "Hoa quả";
+        }
+        return "Khác";
+
     }
 
 }

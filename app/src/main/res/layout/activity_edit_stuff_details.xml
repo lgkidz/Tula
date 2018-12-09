@@ -68,6 +68,7 @@
                 android:focusable="false"
                 android:hint="Phân loại"
                 android:textSize="22sp" />
+
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -126,7 +127,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusable="false"
-                android:hint="ngày hết hạn"
+                android:hint="Dùng trước ngày"
                 android:inputType="date"
                 android:onClick="showDatePicker"
                 android:textSize="22sp" />

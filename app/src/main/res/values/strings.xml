@@ -23,6 +23,20 @@
     <string name="recipe_total_cal_suffix">Cal</string>
     <string name="tv_help">Help</string>
 
+    <string-array name="temporary_ingredients_categories">
+        <item>Bơ sữa</item>
+        <item>Bộ mì và gạo</item>
+        <item>Cá</item>
+        <item>Hoa quả</item>
+        <item>Hạt có vỏ</item>
+        <item>Rau củ</item>
+        <item>Thịt</item>
+        <item>Thủy hải sản</item>
+        <item>Trứng</item>
+        <item>Đậu và đỗ</item>
+        <item>Đồ uống</item>
+    </string-array>
+
     <string-array name="mass_unit">
         <item>lạng</item>
         <item>kg</item>
@@ -53,7 +67,7 @@
     </string-array>
 
     <string-array name="search_keyword">
-        <item>cá</item>
+        <item>cá </item>
         <item>tôm</item>
         <item>cua</item>
         <item>ghẹ</item>

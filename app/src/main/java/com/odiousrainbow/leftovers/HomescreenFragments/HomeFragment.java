@@ -158,7 +158,8 @@ public class HomeFragment extends Fragment {
             String json = sharedPreferences.getString(getString(R.string.preference_stored_stuff_key),null);
             Gson gson = new Gson();
             Type type = new TypeToken<ArrayList<Map<String,String>>>(){}.getType();
-            List<Map<String,String>> stuffsInTula = gson.fromJson(json,type);
+            List<Map<String,String>> stuffsInTula = new ArrayList<>();
+            stuffsInTula = gson.fromJson(json,type);
 
             if(json != null && !json.equals("[]")){
                 empty_tula_layout.setVisibility(View.INVISIBLE);
@@ -190,7 +191,11 @@ public class HomeFragment extends Fragment {
             String json = sharedPreferences.getString(getString(R.string.preference_stored_stuff_key),null);
             Gson gson = new Gson();
             Type type = new TypeToken<ArrayList<Map<String,String>>>(){}.getType();
-            List<Map<String,String>> stuffsInTula = gson.fromJson(json,type);
+
+            List<Map<String,String>> stuffsInTula = new ArrayList<>();
+            if(json !=null){
+                stuffsInTula = gson.fromJson(json,type);
+            }
             List<String> searchKeywordsList = Arrays.asList(getResources().getStringArray(R.array.search_keyword));
             Map<String,Integer> scoreBoard = new HashMap<>();
 

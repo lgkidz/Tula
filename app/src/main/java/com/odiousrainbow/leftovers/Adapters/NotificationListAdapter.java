@@ -46,8 +46,11 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
             long diff = expDate.getTimeInMillis() - curDate.getTimeInMillis();
             float dayCount = (float) diff / (24 * 60 * 60 * 1000);
             if((int)dayCount <= curDate.getActualMaximum(Calendar.DAY_OF_MONTH)){
-                if((int) dayCount == 0){
-                    notificationItemViewHolder.tv_days_left.setText("Dùng trong ngày");
+                if((int) dayCount < 0){
+                    notificationItemViewHolder.tv_days_left.setText("Quá thời gian dùng tốt nhất!");
+                }
+                else if((int) dayCount == 0){
+                    notificationItemViewHolder.tv_days_left.setText("Nên dùng trong ngày");
                 }
                 else{
                     notificationItemViewHolder.tv_days_left.setText("Còn " + (int) dayCount + " ngày");
