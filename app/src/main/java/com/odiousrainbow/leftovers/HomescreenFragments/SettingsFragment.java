@@ -14,6 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
+import android.widget.Toast;
 
 import com.odiousrainbow.leftovers.R;
 
@@ -28,25 +29,23 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         setPreferencesFromResource(R.xml.preferences, rootKey);
         PreferenceManager preferences = getPreferenceManager();
         int versionCode = BuildConfig.VERSION_CODE;
-        preferences.findPreference("reset_app").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                new AlertDialog.Builder(getActivity()).setTitle("Cài đặt lại")
-                        .setMessage("Tất cả danh sách nguyên liệu và món ăn yêu thích sẽ bị xóa. Bạn chắc chắn chứ?")
-                        .setPositiveButton("Oke", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key),getActivity().MODE_PRIVATE);
-                                sharedPreferences.edit().clear().apply();
-                                Intent backToMainScreen = new Intent(getActivity(),MainActivity.class);
-                                backToMainScreen.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                startActivity(backToMainScreen);
-                            }
-                        })
-                        .setNegativeButton("Quay lại",null)
-                        .show();
-                return true;
-            }
+
+        preferences.findPreference("reset_app").setOnPreferenceClickListener(preference -> {
+            new AlertDialog.Builder(getActivity()).setTitle("Cài đặt lại")
+                    .setMessage("Tất cả danh sách nguyên liệu và món ăn yêu thích sẽ bị xóa. Bạn chắc chắn chứ?")
+                    .setPositiveButton("Oke", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            SharedPreferences sharedPreferences = getActivity().getSharedPreferences(getString(R.string.preference_file_key),getActivity().MODE_PRIVATE);
+                            sharedPreferences.edit().clear().apply();
+                            Intent backToMainScreen = new Intent(getActivity(),MainActivity.class);
+                            backToMainScreen.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(backToMainScreen);
+                        }
+                    })
+                    .setNegativeButton("Quay lại",null)
+                    .show();
+            return true;
         });
     }
 }

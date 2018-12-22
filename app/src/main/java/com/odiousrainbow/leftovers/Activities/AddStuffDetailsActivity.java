@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
@@ -69,6 +70,15 @@ public class AddStuffDetailsActivity extends AppCompatActivity {
         cal_icon = findViewById(R.id.cal_icon);
         noti_switch = findViewById(R.id.noti_switch);
         exp_date_text = findViewById(R.id.exp_date_text);
+        SharedPreferences settingPref = PreferenceManager.getDefaultSharedPreferences(this);
+        noti_switch.setChecked(settingPref.getBoolean("show_notification",false));
+
+        if(!noti_switch.isChecked()){
+            textInputLayoutExpDate.setVisibility(View.GONE);
+            cal_icon.setVisibility(View.GONE);
+            exp_date_text.setVisibility(View.GONE);
+        }
+
         setToolbar();
         init();
     }

@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,10 @@ public class TulaListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public  TulaListAdapter(Context context, List<Map<String,String>> data){
         this.mContext = context;
         this.mRawData = data;
+        Collections.sort(mRawData,(o1, o2) -> {
+            int c =  o1.get("iName").compareTo(o2.get("iName"));
+            return c;
+        });
         this.headerList = new ArrayList<>();
         this.mData = new ArrayList<>();
         this.totalitemsPerHeader = new HashMap<>();

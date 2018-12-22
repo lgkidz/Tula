@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
@@ -76,6 +77,15 @@ public class EditStuffDetailsActivity extends AppCompatActivity {
         cal_icon = findViewById(R.id.cal_icon);
         noti_switch = findViewById(R.id.noti_switch);
         exp_date_text = findViewById(R.id.exp_date_text);
+        SharedPreferences settingPref = PreferenceManager.getDefaultSharedPreferences(this);
+        noti_switch.setChecked(settingPref.getBoolean("show_notification",false));
+
+        if(!noti_switch.isChecked()){
+            textInputLayoutExpDate.setVisibility(View.GONE);
+            cal_icon.setVisibility(View.GONE);
+            exp_date_text.setVisibility(View.GONE);
+        }
+
         setToolbar();
         init();
     }
@@ -100,6 +110,11 @@ public class EditStuffDetailsActivity extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DAY_OF_YEAR, 7);
         expDate = calendar;
+        try {
+            expDate.setTime(dateFormat.parse(ingreExpDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         Date expDateRaw = calendar.getTime();
         String expDateString = dateFormat.format(expDateRaw);
         et_exp_date.setText(expDateString);
@@ -111,14 +126,8 @@ public class EditStuffDetailsActivity extends AppCompatActivity {
                 String monthzeroOrNot = month+1<10?"0":"";
                 et_exp_date.setText(dayzeroOrNot + dayOfMonth + "/" + monthzeroOrNot + (month + 1) + "/" + year);
                 Calendar curDate = Calendar.getInstance();
-                Calendar expDate = Calendar.getInstance();
+                //Calendar expDate = Calendar.getInstance();
                 expDate.set(year,month,dayOfMonth);
-                try {
-                    expDate.setTime(dateFormat.parse(ingreExpDate));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
 
                 long diff = expDate.getTimeInMillis() - curDate.getTimeInMillis();
                 float dayCount = (float) diff / (24 * 60 * 60 * 1000);

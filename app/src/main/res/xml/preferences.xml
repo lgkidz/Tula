@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <SwitchPreference
         android:key="show_notification"
-        android:title="Thống báo"
+        android:title="Thông báo"
         android:summary="Nhận thông báo nguyên liệu hết hạn"
         android:defaultValue="true"/>
     <Preference

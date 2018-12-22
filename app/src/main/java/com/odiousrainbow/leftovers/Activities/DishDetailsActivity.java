@@ -218,12 +218,14 @@ public class DishDetailsActivity extends AppCompatActivity implements ViewPager.
 
         neededIngredients = new ArrayList<>();
         boolean havingMoreThanNeeded = false;
+        int ingresHaveMoreThanNedded = 0;
         for(int i =0 ;i<listIngredient.size();i++){
             if(!listIngredient.get(i).isSpice()){
                 Ingredient temp = new Ingredient(listIngredient.get(i));
                 for(int j = 0;j<stuffsInTula.size();j++){
                     if(stuffsInTula.get(j).get("iName").equals(listIngredient.get(i).getName()) && haveMoreThanNeeded(i)){
                         havingMoreThanNeeded = true;
+                        ingresHaveMoreThanNedded++;
                         break;
                     }
                     else if(stuffsInTula.get(j).get("iName").equals(listIngredient.get(i).getName()) && !haveMoreThanNeeded(i)){
@@ -246,7 +248,7 @@ public class DishDetailsActivity extends AppCompatActivity implements ViewPager.
         }
 
         Log.d("hasmorethanneeded", neededIngredients.toString());
-        if(havingMoreThanNeeded){
+        if(ingresHaveMoreThanNedded == stuffsInTula.size()){
             addToCartButtonLayout.setVisibility(View.INVISIBLE);
         }
         neededIngredientsText.setText(neededIngredients.size() + " nguyên liệu");

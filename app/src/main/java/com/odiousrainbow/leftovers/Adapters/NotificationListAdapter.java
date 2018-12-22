@@ -11,17 +11,43 @@ import com.odiousrainbow.leftovers.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 public class NotificationListAdapter extends RecyclerView.Adapter<NotificationListAdapter.NotificationItemViewHolder> {
     private Context mContext;
     private List<Map<String,String>> mData;
+    private SimpleDateFormat dateFormat;
 
     public NotificationListAdapter(Context context, List<Map<String,String>> data){
+        dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         this.mContext = context;
         this.mData = data;
+        Collections.sort(mData,(o1, o2) -> {
+            try {
+                Calendar c1 = Calendar.getInstance();
+                Calendar c2 = Calendar.getInstance();
+                c1.setTime(dateFormat.parse(o1.get("iExpDate")));
+                c2.setTime(dateFormat.parse(o2.get("iExpDate")));
+                return (int)(c1.getTimeInMillis() - c2.getTimeInMillis());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            return 0;
+        });
+        List<Map<String,String>> ingresWithNotifications = new ArrayList<>();
+        for(Map<String,String> m : mData){
+            if(m.get("iNoti").equals("true")){
+                ingresWithNotifications.add(m);
+            }
+        }
+
+        this.mData = ingresWithNotifications;
+
     }
 
     @NonNull
@@ -35,7 +61,7 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
     public void onBindViewHolder(@NonNull NotificationItemViewHolder notificationItemViewHolder, int i) {
             notificationItemViewHolder.tv_name.setText(mData.get(i).get("iName"));
             notificationItemViewHolder.tv_quan.setText(mData.get(i).get("iQuan") + " " + mData.get(i).get("iUnit"));
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
             Calendar curDate = Calendar.getInstance();
             Calendar expDate = Calendar.getInstance();
             try {
