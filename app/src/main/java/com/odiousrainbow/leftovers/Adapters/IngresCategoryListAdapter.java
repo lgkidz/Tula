@@ -1,27 +1,38 @@
 package com.odiousrainbow.leftovers.Adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.odiousrainbow.leftovers.DataModel.IngredientCategory;
+import com.odiousrainbow.leftovers.Helpers.CircleTransform;
 import com.odiousrainbow.leftovers.R;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.util.HashMap;
 import java.util.List;
 
 public class IngresCategoryListAdapter extends BaseExpandableListAdapter {
     private Context context;
-    private List<String> categoryList;
-    private HashMap<String,List<String>> itemsMap;
+    private List<IngredientCategory> categoryList;
+    private StorageReference mStorageRef;
+    private final String KEY_IMAGES_FOLDER = "ingreCateImages";
 
-    public IngresCategoryListAdapter(Context context, List<String> categoryList, HashMap<String, List<String>> itemsMap) {
+    public IngresCategoryListAdapter(Context context, List<IngredientCategory> categoryList) {
         this.context = context;
         this.categoryList = categoryList;
-        this.itemsMap = itemsMap;
+        this.mStorageRef = FirebaseStorage.getInstance().getReference(KEY_IMAGES_FOLDER);
     }
 
     @Override
@@ -31,17 +42,21 @@ public class IngresCategoryListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return itemsMap.get(categoryList.get(groupPosition)).size();
+        return categoryList.get(groupPosition).getProds().size();
     }
 
     @Override
-    public Object getGroup(int groupPosition) {
-        return categoryList.get(groupPosition);
+    public String getGroup(int groupPosition) {
+        return categoryList.get(groupPosition).getName();
+    }
+
+    public String getGroupName(int groupPosition){
+        return categoryList.get(groupPosition).getName();
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosition) {
-        return itemsMap.get(categoryList.get(groupPosition)).get(childPosition);
+    public String getChild(int groupPosition, int childPosition) {
+        return categoryList.get(groupPosition).getProds().get(childPosition);
     }
 
     @Override
@@ -61,19 +76,30 @@ public class IngresCategoryListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-        String headerTitle = (String) getGroup(groupPosition);
+        IngredientCategory cate = categoryList.get(groupPosition);
+        String headerTitle = getGroup(groupPosition);
+
         if(convertView == null){
             LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.ingres_cate_header,null);
         }
+
+
         TextView cateName = convertView.findViewById(R.id.ingres_cate_header);
+        ImageView imageView = convertView.findViewById(R.id.imageView);
         cateName.setText(headerTitle);
+        mStorageRef.child(cate.getImageURL()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).transform(new CircleTransform()).into(imageView);
+            }
+        });
         return convertView;
     }
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        final String childText = (String) getChild(groupPosition,childPosition);
+        final String childText = getChild(groupPosition,childPosition);
         if(convertView == null){
             LayoutInflater inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.ingres_cate_item,null);
@@ -87,4 +113,5 @@ public class IngresCategoryListAdapter extends BaseExpandableListAdapter {
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
+
 }

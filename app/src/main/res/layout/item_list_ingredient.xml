@@ -11,13 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:weightSum="4">
 
         <TextView
             android:id="@+id/tv_quantity"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="1.5"
             android:gravity="left"
             android:text="1 Gam"
             android:textSize="18sp"
@@ -26,8 +27,9 @@
         <TextView
             android:id="@+id/tv_ingredient"
             android:layout_width="0dp"
+            android:paddingLeft="2dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="1.5"
             android:gravity="left"
             android:textSize="18sp"
             android:text="Bun" />

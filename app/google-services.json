@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "702504630497-hjq2gjbd5vbpi2ksi4ol5bo79102ajp2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.odiousrainbow.leftovers",
+            "certificate_hash": "7cf0e33d4f18c9c6ddeac0c13dd0c52a1b3c8b4c"
+          }
+        },
+        {
           "client_id": "702504630497-1l8rj7n79g29vkltoqk28kfolg1e7clv.apps.googleusercontent.com",
           "client_type": 3
         }

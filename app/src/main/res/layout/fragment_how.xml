@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-        <TextView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/tv_recipe_instruction"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="32dp"
-            android:lineHeight="20dp"
-            android:text="This is fragment how to"
-            android:textSize="17sp" />
+            android:paddingTop="32dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
+
+        </android.support.v7.widget.RecyclerView>
 
 </android.support.v4.widget.NestedScrollView>

@@ -19,7 +19,8 @@ public class Recipe implements Serializable {
     public Recipe(String imageUrl, String name, String instruction,String serving,String cookingTime,String totalCal, List<Ingredient> ingredients){
         this.imageUrl = imageUrl;
         this.name = name;
-        this.instruction = instruction.replace("#", "\n");
+        //this.instruction = instruction.replace("#", "\n");
+        this.instruction = instruction;
         this.serving = serving;
         this.cookingTime = cookingTime;
         this.totalCal = totalCal;

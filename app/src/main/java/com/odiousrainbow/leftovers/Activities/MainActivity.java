@@ -70,8 +70,10 @@ public class MainActivity extends AppCompatActivity {
     private ListView listView;
     private ArrayAdapter searchAdapter;
     private FirebaseFirestore db;
-    private List<Recipe> Recipedata = new ArrayList<>();
-    private List<String> searchData = new ArrayList<>();
+    private List<Recipe> Recipedata;
+
+    private List<String> searchData;
+
     private final String KEY_COLLECTION = "dishes";
     private final String KEY_DISH_NAME = "name";
     private final String KEY_DISH_INSTRUCTION = "instr";
@@ -96,6 +98,10 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        Recipedata = new ArrayList<>();
+
+        searchData = new ArrayList<>();
+
         myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -119,7 +125,9 @@ public class MainActivity extends AppCompatActivity {
                    List<String> foundList = new ArrayList<>();
                    for(String item:searchData){
                        if(item.toLowerCase().contains(newText.toLowerCase())){
-                           foundList.add(item);
+                           if(!foundList.contains(item)){
+                               foundList.add(item);
+                           }
                        }
                    }
                     if(foundList.size() > 0){
@@ -348,7 +356,6 @@ public class MainActivity extends AppCompatActivity {
                                     ,ingredients);
                             Recipedata.add(recipe);
                             searchData.add(recipe.getName());
-
                         }
                     }
                 });

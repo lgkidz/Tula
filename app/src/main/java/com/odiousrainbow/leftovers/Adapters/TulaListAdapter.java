@@ -188,7 +188,8 @@ public class TulaListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         public void setData(String name,String quantity,String unit, String expDate, String noti){
-            this.itemName.setText(name);
+            String ingre = name.substring(0, 1).toUpperCase() + name.substring(1);
+            this.itemName.setText(ingre);
             this.itemQuan.setText(quantity + " "  +unit);
             this.iExpDate = expDate;
             this.iNoti = noti;

@@ -245,7 +245,7 @@ public class EditStuffDetailsActivity extends AppCompatActivity {
                                 }
                             }
 
-                            String iName = et_name.getText().toString();
+                            String iName = et_name.getText().toString().toLowerCase();
                             String iCate = et_cate.getText().toString();
                             String iQuan = et_quan.getText().toString();
                             String iUnit = unit_spinner.getSelectedItem().toString();
